@@ -59,7 +59,12 @@ describe('AppComponent', () => {
     expect(app.selected()).toBeNull();
     expect(app.entries().map(entry => entry.speciesId)).toEqual([252, 253, 255]);
     expect(view.querySelectorAll('.pokemon-tile').length).toBe(3);
-    expect(view.querySelectorAll('.tile-image img').length).toBe(3);
+    expect(view.querySelectorAll('.pokemon-tile img').length).toBe(3);
+    const firstIcon = view.querySelector('.pokemon-tile img') as HTMLImageElement;
+    expect(firstIcon.getAttribute('src')).toContain('/generation-vii/icons/252.png');
+    expect(firstIcon.getAttribute('width')).toBe('40');
+    expect(firstIcon.getAttribute('height')).toBe('32');
+    expect(view.querySelectorAll('.oras-button').length).toBe(2);
     expect(view.querySelector('.detail-screen')).toBeNull();
     expect(http.match(() => true).length).toBe(0);
     expect(dexService.GetPokedex).toHaveBeenCalledOnceWith('updated-hoenn');
@@ -78,7 +83,8 @@ describe('AppComponent', () => {
 
     expect(app.selected()?.name).toBe('Treecko');
     expect(view.querySelector('.detail-screen')).not.toBeNull();
-    expect(view.querySelector('.pixel-grid')).toBeNull();
+    expect(view.querySelector('.pixel-grid')).not.toBeNull();
+    expect(view.querySelector('.dex-collection')?.getAttribute('inert')).toBe('');
     expect(new URLSearchParams(window.location.search).get('pokemon')).toBe('252');
 
     const request = http.expectOne('https://pokeapi.co/api/v2/pokemon/252');
@@ -98,6 +104,7 @@ describe('AppComponent', () => {
 
     expect(app.selected()).toBeNull();
     expect(view.querySelector('.pokemon-tile')).not.toBeNull();
+    expect(view.querySelector('.detail-screen')).toBeNull();
     expect(window.location.search).not.toContain('pokemon=');
   });
 
