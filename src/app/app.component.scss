@@ -73,104 +73,167 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .device-showcase { margin: 12px 0 14px; padding: 6px 0 0; }
 .showcase-caption, .showcase-footnote { justify-content: space-between; gap: 8px; padding: 0 clamp(3px, 5vw, 60px) 4px; font-size: 9px; font-weight: 900; letter-spacing: .14em; color: #8abdd4; }
 .showcase-footnote { padding-top: 2px; color: #70a0c1; }
-.oras-device {
+.original-device {
   position: relative;
   isolation: isolate;
-  width: min(100%, 1120px);
+  width: min(100%, 1060px);
+  aspect-ratio: 2048 / 880;
   margin: 0 auto;
-  aspect-ratio: 1200 / 435;
-  filter: drop-shadow(0 15px 9px #001323ab) drop-shadow(0 25px 32px #010a1eaa);
-  transform-origin: center 66%;
-  animation: oras-boot 1050ms cubic-bezier(.17,.76,.22,1.08) both;
+  filter: drop-shadow(0 15px 11px #020c20a8) drop-shadow(0 23px 28px #0011238c);
+  transform-origin: center 75%;
+  animation: original-device-entrance 850ms cubic-bezier(.18,.77,.22,1) both;
 }
-.oras-device::before {
+.original-device::before {
   position: absolute;
-  z-index: -2;
+  z-index: -1;
   content: '';
-  left: 14%;
-  right: 14%;
-  bottom: 1%;
-  height: 18%;
+  left: 15%;
+  right: 15%;
+  bottom: 4%;
+  height: 10%;
   border-radius: 50%;
-  background: #061227;
+  background: #010f25b3;
   filter: blur(24px);
 }
-.oras-silhouette { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.oras-ball-emblem {
+.original-cover {
   position: absolute;
-  left: 10.4%;
-  top: 29.5%;
-  width: 13.2%;
-  height: 38%;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  object-fit: contain;
+}
+.original-cover-top {
+  z-index: 1;
+  top: 0;
+  animation: original-cover-top-enter 900ms cubic-bezier(.15,.77,.24,1) both;
+}
+.original-cover-bottom {
+  z-index: 2;
+  top: 41.82%;
+  animation: original-cover-bottom-enter 900ms cubic-bezier(.15,.77,.24,1) both;
+}
+.original-emblem {
+  position: absolute;
+  z-index: 3;
+  top: 32.8%;
+  left: 10.9%;
+  width: 13.8%;
+  height: auto;
   border-radius: 50%;
   object-fit: contain;
-  filter: drop-shadow(0 3px 5px #650c2299);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px #0a092b8c);
+  animation: original-emblem-activate 920ms ease-out 350ms both;
 }
-.oras-power-led { position: absolute; left: 27%; top: 18%; width: clamp(4px, .65vw, 9px); height: clamp(4px, .65vw, 9px); border-radius: 50%; background: #91fce4; box-shadow: 0 0 9px #d9fafa, inset 0 0 2px #fff; animation: led-on 1.7s ease-in-out 1; }
-.oras-lcd {
+.original-screen {
   position: absolute;
-  left: 31.8%;
-  top: 17%;
-  width: 42.7%;
-  height: 63%;
-  border: clamp(3px, .9vw, 11px) solid #232831;
-  border-radius: clamp(5px, 1.5vw, 18px);
-  background: #111c27;
-  box-shadow: inset 0 0 0 2px #0f1622, 0 2px 0 #ffac7d88;
-  padding: clamp(3px, .6vw, 8px);
+  z-index: 4;
+  top: 27.8%;
+  left: 36.4%;
+  width: 27.25%;
+  height: 42.3%;
+  overflow: hidden;
+  border-radius: clamp(2px, .55vw, 8px);
+  background: #11638b;
+  box-shadow: inset 0 0 17px #001d3aba, inset 0 0 0 2px #1b7cb18c;
+  animation: original-lcd-on 720ms ease-out 680ms both;
 }
-.oras-lcd-display {
+.original-screen-button {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
-  min-width: 0;
+  justify-content: center;
+  gap: clamp(2px, .5vw, 7px);
   overflow: hidden;
-  border-radius: 3px;
-  color: #c6fcf9;
-  background: radial-gradient(ellipse at 50% 50%, #1c9ebe, #0b638f 48%, #064367);
+  width: 100%;
+  height: 100%;
+  padding: 5% 7%;
+  border: 0;
+  border-radius: inherit;
+  color: #dffcff;
+  background: radial-gradient(ellipse at 50% 45%, #39bcce 0%, #1588a9 54%, #075070 100%);
   text-align: center;
-  box-shadow: inset 0 2px 15px #012338b0;
-  animation: lcd-on 620ms ease-out 460ms both;
+  cursor: pointer;
 }
-.oras-lcd-display::before { position: absolute; inset: 0; pointer-events: none; content: ''; opacity: .27; background: url('../assets/diamond_cover.png') center center / cover no-repeat; mix-blend-mode: screen; }
-.oras-lcd-display::after { position: absolute; inset: 0; pointer-events: none; content: ''; opacity: .08; background: repeating-linear-gradient(0deg, transparent, transparent 2px, white 3px); }
-.lcd-mini-label { position: relative; color: #aef2eb; font-size: clamp(6px, .9vw, 11px); font-weight: 900; letter-spacing: .13em; }
-.lcd-logo { position: relative; font-size: clamp(14px, 3.2vw, 42px); font-weight: 950; letter-spacing: .16em; text-shadow: 2px 4px 1px #0139587d; }
-.lcd-readout { position: relative; font-size: clamp(6px, .9vw, 11px); font-weight: 900; letter-spacing: .12em; }
-.lcd-cursor { color: #ffda73; margin-right: 3px; }
-.lcd-mark { color: #8df5d1; }
-.lcd-cross { position: absolute; right: 6%; top: 10%; color: #a5f3ed70; font-size: 20px; }
-.oras-buttons { position: absolute; left: 80%; top: 41%; width: 12%; height: 24%; transform: rotate(-28deg); }
-.oras-button {
+.original-screen-button::before {
   position: absolute;
-  display: grid;
-  place-items: center;
-  width: 41%;
-  height: 91%;
-  border: clamp(1px, .25vw, 3px) solid #266c6c;
-  border-bottom-width: clamp(2px, .5vw, 6px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 22%, #f2ffe8, #b1edcf 26%, #55b997 80%, #237e78);
-  color: #205e63;
-  font-size: clamp(8px, 1.3vw, 16px);
-  font-weight: 950;
-  text-shadow: 0 1px #ffffff8c;
-  box-shadow: inset 0 2px 3px #fff7, 0 4px 7px #580d20ad;
-  transition: filter .15s, translate .15s;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: url('../assets/diamond_cover.png') center center / 118% auto no-repeat;
+  opacity: .31;
+  mix-blend-mode: screen;
 }
-.oras-button:hover { filter: brightness(1.2); translate: 0 -2px; }
-.oras-button:active { translate: 0 2px; }
-.oras-button-a { left: 54%; top: -7%; }
-.oras-button-b { left: -3%; top: 14%; }
-.oras-small-buttons { position: absolute; display: flex; gap: 6%; width: 12%; height: 5%; left: 79%; top: 70%; transform: rotate(-25deg); }
-.oras-small-button { display: block; width: 38%; height: 100%; border: 1px solid #b8513f; border-radius: 50%; background: linear-gradient(#ffbca4, #c25140); box-shadow: inset 0 2px #fff6, 0 2px 3px #661b1b; }
-.oras-speaker { position: absolute; display: flex; align-items: center; gap: 5%; left: 90%; top: 61%; width: 5%; height: 17%; transform: rotate(-25deg); }
-.oras-speaker i { flex: 1; height: 90%; border-radius: 8px; background: #731b29; box-shadow: 1px 0 #ffac84; }
-.oras-device button:focus-visible { outline-offset: 5px; }
+.original-screen-button::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, #031a2912 0, #031a2912 1px, transparent 2px, transparent 4px);
+  opacity: .48;
+}
+.original-screen-button:hover { background: radial-gradient(ellipse at center, #63d6d5, #208cae 58%, #075b80 100%); }
+.original-screen-button:focus-visible { outline: 3px solid #ffe589; outline-offset: -5px; }
+.original-screen-heading,
+.original-screen-logo,
+.original-screen-hint {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+.original-screen-heading {
+  overflow: hidden;
+  color: #d5fff7;
+  font-size: clamp(4px, .67vw, 9px);
+  font-weight: 950;
+  letter-spacing: .11em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.original-screen-logo {
+  width: 85%;
+  max-height: 45%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 2px #03283c66);
+}
+.original-screen-hint {
+  color: #ecfff1;
+  font-size: clamp(5px, .72vw, 10px);
+  font-weight: 950;
+  letter-spacing: .08em;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px #053249;
+}
+.original-screen-hint span { color: #fbe085; padding-right: 4px; }
+@keyframes original-device-entrance {
+  from { opacity: 0; transform: perspective(1100px) rotateX(28deg) translateY(25px) scale(.92); }
+  to { opacity: 1; transform: perspective(1100px) rotateX(0) translateY(0) scale(1); }
+}
+@keyframes original-cover-top-enter {
+  from { opacity: .6; transform: translateY(-12%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes original-cover-bottom-enter {
+  from { opacity: .6; transform: translateY(12%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes original-emblem-activate {
+  from { opacity: 0; transform: scale(.88) rotate(-15deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes original-lcd-on {
+  0% { opacity: 0; filter: brightness(0); transform: scaleY(.05); }
+  60% { opacity: 1; filter: brightness(.88); }
+  100% { opacity: 1; filter: brightness(1); transform: scaleY(1); }
+}
 
 .dex-collection {
   position: relative;
@@ -295,14 +358,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .brand-ball i { width: 11px; height: 11px; top: calc(50% - 5.5px); left: calc(50% - 5.5px); border-width: 2px; }
   .header-chip { font-size: 7px; padding: 5px 7px; }
   .device-showcase { margin: 7px 0 11px; }
+  .original-screen { border-radius: 2px; box-shadow: inset 0 0 4px #001d3a, inset 0 0 0 1px #1b7cb18c; }
+  .original-screen-button { gap: 2px; padding: 3% 5%; }
+  .original-screen-heading { font-size: 4px; letter-spacing: 0; }
+  .original-screen-hint { font-size: 5px; letter-spacing: 0; }
   .showcase-caption, .showcase-footnote { font-size: 7px; letter-spacing: .07em; }
-  .oras-power-led { top: 18%; }
-  .oras-lcd { border-width: 3px; padding: 2px; border-radius: 5px; }
-  .oras-button { font-size: 8px; border-width: 1px; border-bottom-width: 2px; }
-  .lcd-mini-label { font-size: 5px; }
-  .lcd-logo { font-size: clamp(12px, 3.2vw, 22px); }
-  .lcd-readout { font-size: 5px; }
-  .lcd-cross { font-size: 10px; }
   .dex-collection { padding: 11px 9px 9px; border-radius: 7px; }
   .collection-head { margin-bottom: 10px; }
   .collection-kicker { font-size: 8px; }
@@ -358,4 +418,5 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .three-background { display: none; }
+  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen { animation: none; opacity: 1; transform: none; filter: none; }
 }
