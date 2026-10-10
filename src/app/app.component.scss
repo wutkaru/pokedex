@@ -102,7 +102,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .display-bezel { position: relative; flex: 1; min-width: 0; max-width: 1050px; padding: 12px 12px 9px; background: linear-gradient(135deg, #28384e, #15233d 38%, #36445c 100%); border: 4px solid #72203b; border-radius: 24px 24px 23px 23px; box-shadow: inset 0 0 0 2px #738295, inset 0 6px 14px #010a23, 0 6px 2px #99162c; }
 .display-glass { position: relative; overflow: hidden; min-height: 506px; border-radius: 10px; border: 6px solid #061d35; background: #e1fcff; box-shadow: inset 0 0 10px #81b7d1, 0 1px 2px #97bcd0; }
 .display-content { position: relative; z-index: 0; display: flex; flex-direction: column; min-height: 494px; overflow: hidden; color: #123d59; background: linear-gradient(145deg, #e8fbff 0%, #d7f8fe 65%, #c0eaf7); }
-.display-content::before { position: absolute; inset: 0; z-index: -1; content: ''; opacity: .15; pointer-events: none; background: url('assets/diamond_cover.png') center 27% / 120% auto no-repeat; }
+.display-content::before { position: absolute; inset: 0; z-index: -1; content: ''; opacity: .15; pointer-events: none; background: url('../assets/diamond_cover.png') center 27% / 120% auto no-repeat; }
 .display-toolbar, .display-status { align-items: center; justify-content: space-between; gap: 8px; padding: 11px 18px; color: #c0f7ff; background: linear-gradient(90deg, #123b60, #216b8f); letter-spacing: .12em; font-size: 10px; font-weight: 900; }
 .display-toolbar { height: 40px; flex: 0 0 auto; }
 .screen-title { display: flex; align-items: center; gap: 9px; }
