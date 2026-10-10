@@ -7,8 +7,6 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { PokedexesService } from '../services/games/pokedexes.service';
 
-type ListMode = 'all' | 'favorites';
-
 interface DexEntry {
   number: number;
   speciesId: number;
@@ -44,22 +42,16 @@ export class AppComponent {
   readonly detailLoading = signal(false);
   readonly detailError = signal(false);
   readonly search = signal('');
-  readonly listMode = signal<ListMode>('all');
-  readonly favorites = signal<ReadonlySet<number>>(new Set<number>());
 
   readonly visibleEntries = computed(() => {
     const query = this.search().trim().toLowerCase();
-    const favorites = this.favorites();
     return this.entries().filter(entry =>
-      (this.listMode() === 'all' || favorites.has(entry.speciesId)) &&
       (!query ||
         entry.name.toLowerCase().includes(query) ||
         String(entry.number).includes(query) ||
         String(entry.speciesId).includes(query))
     );
   });
-
-  readonly totalFavorites = computed(() => this.favorites().size);
 
   private readonly dexService = inject(PokedexesService);
   private readonly http = inject(HttpClient);
@@ -69,7 +61,6 @@ export class AppComponent {
   private lastOpenedSpeciesId: number | null = null;
 
   ngOnInit(): void {
-    this.restoreFavorites();
     void this.loadPokedex();
   }
 
@@ -136,39 +127,9 @@ export class AppComponent {
     this.resetGridScroll();
   }
 
-  setMode(mode: ListMode): void {
-    this.listMode.set(mode);
-    this.resetGridScroll();
-  }
-
   clearFilters(): void {
     this.search.set('');
-    this.listMode.set('all');
     this.resetGridScroll();
-  }
-
-  toggleFavorite(): void {
-    const pokemon = this.selected();
-    if (!pokemon) {
-      return;
-    }
-
-    const next = new Set(this.favorites());
-    if (next.has(pokemon.speciesId)) {
-      next.delete(pokemon.speciesId);
-    } else {
-      next.add(pokemon.speciesId);
-    }
-    this.favorites.set(next);
-
-    try {
-      window.localStorage.setItem('hoenn-dex-favorites', JSON.stringify(Array.from(next)));
-    } catch {
-    }
-  }
-
-  isFavorite(speciesId: number): boolean {
-    return this.favorites().has(speciesId);
   }
 
   formatNumber(value: number): string {
@@ -377,19 +338,6 @@ export class AppComponent {
     this.savedScrollTop = 0;
     if (this.spriteScroll) {
       this.spriteScroll.nativeElement.scrollTop = 0;
-    }
-  }
-
-  private restoreFavorites(): void {
-    try {
-      const value: unknown = JSON.parse(window.localStorage.getItem('hoenn-dex-favorites') ?? '[]');
-      if (Array.isArray(value)) {
-        this.favorites.set(new Set(value.filter(
-          (item): item is number => Number.isInteger(item) && item > 0
-        )));
-      }
-    } catch {
-      this.favorites.set(new Set<number>());
     }
   }
 
