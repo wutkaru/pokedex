@@ -117,8 +117,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   aspect-ratio: 2048 / 880;
   margin: 0 auto;
   filter: drop-shadow(0 15px 11px #020c20a8) drop-shadow(0 23px 28px #0011238c);
-  transform-origin: center 75%;
-  animation: original-device-entrance 850ms cubic-bezier(.18,.77,.22,1) both;
+  transform-origin: center 65%;
+  animation: original-device-entrance 1100ms cubic-bezier(.18,.82,.2,1) both;
 }
 .original-device::before {
   position: absolute;
@@ -146,27 +146,72 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .original-cover-top {
   z-index: 1;
   top: 0;
-  animation: original-cover-top-enter 1180ms cubic-bezier(.18,.79,.22,1) 130ms both;
+  animation: original-cover-top-enter 980ms cubic-bezier(.19,.86,.28,1) 190ms both;
 }
 .original-cover-bottom {
   z-index: 2;
   top: 41.82%;
-  animation: original-cover-bottom-enter 1180ms cubic-bezier(.18,.79,.22,1) 130ms both;
+  animation: original-cover-bottom-enter 980ms cubic-bezier(.19,.86,.28,1) 190ms both;
 }
 .original-emblem {
   position: absolute;
   z-index: 3;
-  top: 27.3%;
-  left: 9.1%;
-  width: 18.5%;
+  top: 30.9%;
+  left: 10.4%;
+  width: 16.5%;
   height: auto;
-  clip-path: circle(37.5% at 50% 50%);
+  aspect-ratio: 1;
+  clip-path: circle(38.5% at 50% 50%);
   object-fit: contain;
   pointer-events: none;
-  transform: scaleY(1.25);
-  filter: drop-shadow(0 3px 4px #0a092b8c);
-  animation: original-emblem-activate 610ms cubic-bezier(.16,.7,.25,1) 1010ms both;
+  filter: drop-shadow(0 2px 3px #0a092b88);
+  animation: original-emblem-activate 630ms cubic-bezier(.16,.8,.24,1) 910ms both;
 }
+.device-inner-layer {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+.device-control-frame {
+  position: absolute;
+  top: 32.5%;
+  left: 77%;
+  width: 11%;
+  height: 33%;
+  border: 1px solid #a32b31a6;
+  border-radius: 48% 52% 47% 53% / 47% 48% 52% 53%;
+  background: linear-gradient(146deg, #f5583a55, #8f1d2b75 60%, #f43f3275);
+  box-shadow: inset 0 2px 2px #ffd1a866, inset 0 -3px 5px #63122170, 0 1px 3px #5a0a1990;
+  transform: rotate(-9deg);
+  pointer-events: auto;
+  animation: inner-control-assemble 810ms cubic-bezier(.17,.82,.25,1) 580ms both;
+}
+.device-control {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 35%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid #222431;
+  border-radius: 50%;
+  color: #202d3b;
+  background: radial-gradient(circle at 31% 21%, #fcffff 0, #cad2dd 27%, #88919f 62%, #434958 91%);
+  box-shadow: inset 0 1px 1px #ffffffc9, inset 0 -2px 2px #343645ae, 0 2px 0 #63162596, 0 3px 4px #47121b70;
+  font-family: inherit;
+  font-size: clamp(6px, .83vw, 12px);
+  font-weight: 950;
+  line-height: 1;
+  text-shadow: 0 1px #ffffff80;
+  touch-action: manipulation;
+  transition: box-shadow .16s ease, filter .16s ease, translate .16s ease;
+}
+.device-control-a { top: 14%; right: 11%; }
+.device-control-b { top: 51%; left: 11%; }
+.device-control:hover:not(:disabled) { filter: brightness(1.12); }
+.device-control:active:not(:disabled) { translate: 0 2px; box-shadow: inset 0 2px 3px #343645a8, 0 1px 1px #47121b88; }
+.device-control:disabled { cursor: default; opacity: .78; }
 .original-power-indicator {
   position: absolute;
   z-index: 5;
@@ -197,7 +242,16 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   border-radius: clamp(2px, .55vw, 8px);
   background: #11638b;
   box-shadow: inset 0 0 17px #001d3aba, inset 0 0 0 2px #1b7cb18c;
-  animation: original-lcd-on 760ms cubic-bezier(.19,.76,.25,1) 1380ms both;
+  animation: original-lcd-on 920ms cubic-bezier(.17,.74,.23,1) 1380ms both;
+}
+.original-screen::after {
+  position: absolute;
+  z-index: 5;
+  inset: -10%;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 34%, #d9ffff63 48%, transparent 62%);
+  animation: original-lcd-sweep 1300ms ease-out 1860ms both;
 }
 .original-screen-button {
   position: relative;
@@ -270,23 +324,38 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   text-shadow: 0 1px 2px #053249;
 }
 .original-screen-hint span { color: #fbe085; padding-right: 4px; }
+.intro-mode .original-screen-hint {
+  animation: lcd-prompt-pulse 2300ms ease-in-out 2600ms infinite;
+}
 @keyframes original-device-entrance {
-  from { opacity: 0; transform: perspective(1100px) rotateX(28deg) translateY(25px) scale(.92); }
-  to { opacity: 1; transform: perspective(1100px) rotateX(0) translateY(0) scale(1); }
+  0% { opacity: 0; transform: perspective(1100px) rotateX(14deg) rotateZ(-3deg) translateY(26px) scale(.91); }
+  75% { opacity: 1; transform: perspective(1100px) rotateX(-1deg) rotateZ(.4deg) translateY(-3px) scale(1.012); }
+  100% { opacity: 1; transform: perspective(1100px) rotateX(0) rotateZ(0) translateY(0) scale(1); }
 }
 @keyframes original-cover-top-enter {
-  from { opacity: .78; transform: perspective(1100px) translateY(-31%) rotateX(-9deg); }
-  78% { opacity: 1; }
-  to { opacity: 1; transform: perspective(1100px) translateY(0) rotateX(0); }
+  from { opacity: .55; transform: translateY(-17%) rotate(-1deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
 }
 @keyframes original-cover-bottom-enter {
-  from { opacity: .78; transform: perspective(1100px) translateY(31%) rotateX(9deg); }
-  78% { opacity: 1; }
-  to { opacity: 1; transform: perspective(1100px) translateY(0) rotateX(0); }
+  from { opacity: .55; transform: translateY(17%) rotate(1deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
 }
 @keyframes original-emblem-activate {
-  from { opacity: 0; transform: scale(.91, 1.16) rotate(-8deg); }
-  to { opacity: 1; transform: scale(1, 1.25) rotate(0); }
+  from { opacity: 0; transform: translateY(5%) scale(.82) rotate(-8deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+@keyframes inner-control-assemble {
+  from { opacity: 0; transform: translateX(15%) scale(.91) rotate(-16deg); }
+  to { opacity: 1; transform: translateX(0) scale(1) rotate(-9deg); }
+}
+@keyframes original-lcd-sweep {
+  0% { opacity: 0; transform: translateX(-140%); }
+  19% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(140%); }
+}
+@keyframes lcd-prompt-pulse {
+  0%, 100% { opacity: .72; }
+  50% { opacity: 1; }
 }
 @keyframes original-power-on {
   0%, 29%, 55% { opacity: .1; filter: brightness(.15); box-shadow: inset 0 0 0 1px #adffd344; }
@@ -344,11 +413,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   height: auto;
   min-width: 0;
   padding: 4px;
-  border: 2px solid #fffefa;
+  border: 1px solid transparent;
   border-radius: 50%;
-  background: linear-gradient(180deg, #ffffff 0 46%, #eef6f8 47% 100%);
-  box-shadow: inset 0 2px 3px #ffffffc4, inset 0 -3px 4px #8daab633, 0 3px 0 #183e5b90, 0 5px 9px #001b3659;
-  transition: transform 170ms ease, box-shadow 170ms ease, border-color 170ms ease;
+  background: transparent;
+  box-shadow: none;
+  transition: transform 170ms ease, box-shadow 170ms ease, background-color 170ms ease, border-color 170ms ease;
 }
 .pokemon-tile::before {
   position: absolute;
@@ -357,7 +426,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   width: 100%;
   height: 7%;
   content: '';
-  background: #607c8d;
+  background: #59778b;
+  opacity: 0;
+  transition: opacity 150ms ease;
 }
 .pokemon-tile::after {
   position: absolute;
@@ -367,17 +438,28 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   aspect-ratio: 1;
   content: '';
   transform: translate(-50%, -50%);
-  border: 2px solid #607c8d;
+  border: 2px solid #59778b;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px #ffffffb8;
+  background: #e7f7ff;
+  box-shadow: 0 0 0 2px #ffffffb0;
+  opacity: 0;
+  transition: opacity 150ms ease;
 }
-.pokemon-tile:hover, .pokemon-tile:focus-visible {
-  transform: translateY(-3px) scale(1.045);
-  border-color: #ff8283;
-  box-shadow: inset 0 2px 3px #ffffffc4, 0 4px 0 #d64b5d90, 0 7px 16px #001b3677;
+@media (hover: hover) {
+  .pokemon-tile:hover {
+    transform: translateY(-2px);
+    background: #b6eaff18;
+    border-color: #95dcf044;
+  }
 }
-.pokemon-tile:active { transform: translateY(1px) scale(.98); }
+.pokemon-tile:focus-visible, .pokemon-tile:active {
+  background: #f4fbffe0;
+  border-color: #ffffff;
+  box-shadow: 0 2px 0 #3c88a8a0, 0 4px 11px #001b3672;
+}
+.pokemon-tile:focus-visible::before, .pokemon-tile:active::before,
+.pokemon-tile:focus-visible::after, .pokemon-tile:active::after { opacity: .65; }
+.pokemon-tile:active { transform: translateY(1px) scale(.97); }
 .pokemon-tile img { position: relative; z-index: 1; display: block; width: 40px; height: 32px; max-width: 100%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 1px #31536b66); }
 .pokemon-tile img[hidden] { display: none; }
 .empty-grid { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 148px; padding: 16px; color: #b1d6e6; font-size: 12px; text-align: center; }
@@ -498,6 +580,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .three-background { display: none; }
-  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen, .power-light, .dex-collection, .site-header, .page-footer { animation: none; opacity: 1; transform: none; filter: none; }
-  .original-emblem { transform: scaleY(1.25); }
+  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen, .original-screen::after, .power-light, .device-control-frame, .original-screen-hint, .dex-collection, .site-header, .page-footer { animation: none; opacity: 1; filter: none; }
+  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem { transform: none; }
+  .device-control-frame { transform: rotate(-9deg); }
+  .original-screen::after { opacity: 0; }
 }
