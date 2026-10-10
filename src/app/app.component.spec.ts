@@ -45,7 +45,7 @@ describe('AppComponent', () => {
     window.history.replaceState({}, '', window.location.pathname);
   });
 
-  it('shows the complete pixel-art grid by default without fetching details', async () => {
+  it('shows only the centered ORAS device on initial load, without mounting any Pokémon tiles', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     await Promise.resolve();
@@ -57,12 +57,12 @@ describe('AppComponent', () => {
     expect(app.title).toBe('Hoenn Pokédex');
     expect(app.selected()).toBeNull();
     expect(app.entries().map(entry => entry.speciesId)).toEqual([252, 253, 255]);
-    expect(view.querySelectorAll('.pokemon-tile').length).toBe(3);
-    expect(view.querySelectorAll('.pokemon-tile img').length).toBe(3);
-    const firstIcon = view.querySelector('.pokemon-tile img') as HTMLImageElement;
-    expect(firstIcon.getAttribute('src')).toContain('/generation-vii/icons/252.png');
-    expect(firstIcon.getAttribute('width')).toBe('40');
-    expect(firstIcon.getAttribute('height')).toBe('32');
+    expect(app.collectionOpened()).toBeFalse();
+    expect(view.querySelector('.pokedex-app')?.classList.contains('intro-mode')).toBeTrue();
+    expect(view.querySelector('.site-header')).toBeNull();
+    expect(view.querySelector('.dex-collection')).toBeNull();
+    expect(view.querySelector('.page-footer')).toBeNull();
+    expect(view.querySelectorAll('.pokemon-tile').length).toBe(0);
     const covers = Array.from(view.querySelectorAll<HTMLImageElement>('.original-cover'));
     expect(covers.length).toBe(2);
     expect(covers[0].getAttribute('src')).toBe('assets/pokedex_cover_top.png');
@@ -76,12 +76,13 @@ describe('AppComponent', () => {
     expect(view.querySelector('.detail-screen')).toBeNull();
     expect(view.querySelector('.original-power-indicator')).not.toBeNull();
     expect(view.querySelector('.power-light')).not.toBeNull();
+    expect(view.querySelector('.power-caption')).toBeNull();
     expect(view.querySelector('.mode-tabs')).toBeNull();
     expect(http.match(() => true).length).toBe(0);
     expect(dexService.GetPokedex).toHaveBeenCalledOnceWith('updated-hoenn');
   });
 
-  it('uses the original LCD as an accessible shortcut to the compact icon archive', async () => {
+  it('reveals the Pokémon archive only when the original LCD is activated', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     await Promise.resolve();
@@ -91,12 +92,19 @@ describe('AppComponent', () => {
     const view = fixture.nativeElement as HTMLElement;
     const shortcut = view.querySelector<HTMLButtonElement>('.original-screen-button');
     expect(shortcut).not.toBeNull();
-    const focusFirstIcon = spyOn(app, 'focusFirstIcon').and.stub();
-
+    expect(view.querySelector('.dex-collection')).toBeNull();
     shortcut!.click();
-    expect(focusFirstIcon).toHaveBeenCalledTimes(1);
+    fixture.detectChanges();
+    expect(app.collectionOpened()).toBeTrue();
     expect(app.selected()).toBeNull();
+    expect(view.querySelector('.site-header')).not.toBeNull();
+    expect(view.querySelector('.page-footer')).not.toBeNull();
+    expect(view.querySelector('.pokedex-app')?.classList.contains('browser-mode')).toBeTrue();
     expect(view.querySelectorAll('.pokemon-tile').length).toBe(3);
+    const firstIcon = view.querySelector('.pokemon-tile img') as HTMLImageElement;
+    expect(firstIcon.getAttribute('src')).toContain('/generation-vii/icons/252.png');
+    expect(firstIcon.getAttribute('width')).toBe('40');
+    expect(firstIcon.getAttribute('height')).toBe('32');
   });
 
   it('opens a Pokémon file only after a selection, then returns to the grid', async () => {
@@ -107,6 +115,8 @@ describe('AppComponent', () => {
 
     const app = fixture.componentInstance;
     const view = fixture.nativeElement as HTMLElement;
+    (view.querySelector('.original-screen-button') as HTMLButtonElement).click();
+    fixture.detectChanges();
     (view.querySelector('.pokemon-tile') as HTMLButtonElement).click();
     fixture.detectChanges();
 
@@ -150,6 +160,7 @@ describe('AppComponent', () => {
 
     app.clearFilters();
     expect(app.visibleEntries().length).toBe(3);
+    app.openCollection();
     app.openDetail(app.entries()[0]);
     fixture.detectChanges();
     const view = fixture.nativeElement as HTMLElement;
@@ -187,6 +198,10 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.loadError()).toBeTrue();
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('CONNECTION LOST');
+    const view = fixture.nativeElement as HTMLElement;
+    expect(view.textContent).not.toContain('CONNECTION LOST');
+    (view.querySelector('.original-screen-button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(view.textContent).toContain('CONNECTION LOST');
   });
 });
