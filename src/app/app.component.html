@@ -31,6 +31,11 @@
            alt=""
            width="512" height="512" decoding="async">
 
+      <div class="original-power-indicator" role="img" aria-label="Power indicator on">
+        <span class="power-light" aria-hidden="true"></span>
+        <span class="power-caption" aria-hidden="true">POWER</span>
+      </div>
+
       <div class="original-screen">
         <button class="original-screen-button"
                 type="button"
@@ -64,10 +69,6 @@
         <span class="sr-only">Search Pokémon by name or number</span>
         <input #searchInput type="search" placeholder="Search by name or number..." [value]="search()" (input)="onSearch($event)" autocomplete="off">
       </label>
-      <div class="mode-tabs" role="group" aria-label="Pokédex filter">
-        <button type="button" (click)="setMode('all')" [class.active]="listMode() === 'all'" [attr.aria-pressed]="listMode() === 'all'">ALL</button>
-        <button type="button" (click)="setMode('favorites')" [class.active]="listMode() === 'favorites'" [attr.aria-pressed]="listMode() === 'favorites'">★ {{ totalFavorites() }}</button>
-      </div>
     </div>
 
     @if (loading()) {
@@ -95,9 +96,6 @@
               <img [src]="iconUrl(entry.speciesId)" alt=""
                    (error)="iconFallback($event, entry.speciesId)"
                    loading="lazy" width="40" height="32">
-              @if (isFavorite(entry.speciesId)) {
-                <span class="tile-star" aria-hidden="true">★</span>
-              }
             </button>
           } @empty {
             <div class="empty-grid">
@@ -146,12 +144,6 @@
               <div><span>HEIGHT</span><strong>{{ detail() ? heightInMeters() : '—' }}</strong></div>
               <div><span>WEIGHT</span><strong>{{ detail() ? weightInKilos() : '—' }}</strong></div>
             </div>
-            <button type="button" class="save-button" [class.saved]="isFavorite(pokemon.speciesId)"
-                    [attr.aria-pressed]="isFavorite(pokemon.speciesId)"
-                    (click)="toggleFavorite()">
-              <span aria-hidden="true">{{ isFavorite(pokemon.speciesId) ? '★' : '☆' }}</span>
-              {{ isFavorite(pokemon.speciesId) ? 'SAVED TO FAVORITES' : 'SAVE POKÉMON' }}
-            </button>
           </div>
         </div>
         @if (detail(); as data) {

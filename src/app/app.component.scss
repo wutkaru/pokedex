@@ -48,7 +48,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .background-orb-one { top: 13%; left: -55px; }
 .background-orb-two { right: -66px; bottom: 18%; width: 160px; height: 160px; animation-delay: -6s; }
 
-.site-header, .site-brand, .showcase-caption, .showcase-footnote, .collection-head, .collection-toolbar, .collection-status, .page-footer, .detail-topbar, .detail-body, .detail-measures, .detail-tags, .mode-tabs, .stats-grid { display: flex; }
+.site-header, .site-brand, .showcase-caption, .showcase-footnote, .collection-head, .collection-toolbar, .collection-status, .page-footer, .detail-topbar, .detail-body, .detail-measures, .detail-tags, .stats-grid { display: flex; }
 .site-header { align-items: center; justify-content: space-between; gap: 12px; }
 .site-brand { align-items: center; gap: 12px; }
 .brand-ball {
@@ -109,12 +109,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .original-cover-top {
   z-index: 1;
   top: 0;
-  animation: original-cover-top-enter 900ms cubic-bezier(.15,.77,.24,1) both;
+  animation: original-cover-top-enter 1180ms cubic-bezier(.18,.79,.22,1) 130ms both;
 }
 .original-cover-bottom {
   z-index: 2;
   top: 41.82%;
-  animation: original-cover-bottom-enter 900ms cubic-bezier(.15,.77,.24,1) both;
+  animation: original-cover-bottom-enter 1180ms cubic-bezier(.18,.79,.22,1) 130ms both;
 }
 .original-emblem {
   position: absolute;
@@ -127,7 +127,36 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 2px 3px #0a092b8c);
-  animation: original-emblem-activate 920ms ease-out 350ms both;
+  animation: original-emblem-activate 610ms ease-out 1010ms both;
+}
+.original-power-indicator {
+  position: absolute;
+  z-index: 5;
+  top: 22.7%;
+  left: 70%;
+  display: flex;
+  align-items: center;
+  gap: clamp(2px, .4vw, 5px);
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px #280e16);
+}
+.power-light {
+  display: block;
+  width: clamp(4px, 1vw, 12px);
+  aspect-ratio: 1;
+  border: 1px solid #1b5c43;
+  border-radius: 50%;
+  background: radial-gradient(circle at 33% 29%, #eaffd9, #8aff9d 30%, #13ce74 65%, #056339 95%);
+  box-shadow: inset 0 0 0 1px #d8fff877, 0 0 7px #35ff87c9, 0 0 16px #39ea86a6;
+  animation: original-power-on 720ms steps(1, end) 1110ms both;
+}
+.power-caption {
+  color: #fff5dd;
+  font-size: clamp(4px, .65vw, 9px);
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: .1em;
+  text-shadow: 0 1px 3px #290c14b8;
 }
 .original-screen {
   position: absolute;
@@ -140,7 +169,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   border-radius: clamp(2px, .55vw, 8px);
   background: #11638b;
   box-shadow: inset 0 0 17px #001d3aba, inset 0 0 0 2px #1b7cb18c;
-  animation: original-lcd-on 720ms ease-out 680ms both;
+  animation: original-lcd-on 760ms cubic-bezier(.19,.76,.25,1) 1380ms both;
 }
 .original-screen-button {
   position: relative;
@@ -218,16 +247,22 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   to { opacity: 1; transform: perspective(1100px) rotateX(0) translateY(0) scale(1); }
 }
 @keyframes original-cover-top-enter {
-  from { opacity: .6; transform: translateY(-12%); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: .78; transform: perspective(1100px) translateY(-31%) rotateX(-9deg); }
+  78% { opacity: 1; }
+  to { opacity: 1; transform: perspective(1100px) translateY(0) rotateX(0); }
 }
 @keyframes original-cover-bottom-enter {
-  from { opacity: .6; transform: translateY(12%); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: .78; transform: perspective(1100px) translateY(31%) rotateX(9deg); }
+  78% { opacity: 1; }
+  to { opacity: 1; transform: perspective(1100px) translateY(0) rotateX(0); }
 }
 @keyframes original-emblem-activate {
   from { opacity: 0; transform: scale(.88) rotate(-15deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes original-power-on {
+  0%, 29%, 55% { opacity: .1; filter: brightness(.15); box-shadow: inset 0 0 0 1px #adffd344; }
+  30%, 54%, 56%, 100% { opacity: 1; filter: brightness(1); box-shadow: inset 0 0 0 1px #d8fff877, 0 0 7px #35ff87c9, 0 0 16px #39ea86a6; }
 }
 @keyframes original-lcd-on {
   0% { opacity: 0; filter: brightness(0); transform: scaleY(.05); }
@@ -268,9 +303,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .pokemon-search input { width: 100%; min-width: 0; outline: 0; border: 0; background: none; color: #133d5c; font-size: 12px; font-weight: 700; }
 .pokemon-search input::placeholder { color: #598ca5; }
 .pokemon-search:focus-within { outline: 2px solid #ffe596; outline-offset: 1px; }
-.mode-tabs { gap: 5px; }
-.mode-tabs button { height: 36px; min-width: 48px; border: 1px solid #4d96bd; border-radius: 4px; padding: 0 10px; background: #144b73; color: #b7e5ee; font-size: 10px; font-weight: 950; letter-spacing: .07em; }
-.mode-tabs button.active { color: #183c57; background: #99ebdc; border-color: #adfff0; }
 .grid-scroll { min-height: 155px; max-height: min(410px, 52vh); overflow-y: auto; overscroll-behavior: contain; padding: 6px 5px 7px 2px; scrollbar-color: #6cc0d5 #173c5a; scrollbar-width: thin; }
 .pixel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(49px, 1fr)); justify-items: center; gap: 3px; }
 .pokemon-tile {
@@ -290,7 +322,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .pokemon-tile:active { translate: 0 1px; }
 .pokemon-tile img { display: block; width: 40px; height: 32px; max-width: 100%; object-fit: contain; image-rendering: pixelated; }
 .pokemon-tile img[hidden] { display: none; }
-.tile-star { position: absolute; right: 0; top: -2px; color: #ffe584; font-size: 11px; text-shadow: 0 1px 2px #082a48; }
 .empty-grid { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 148px; padding: 16px; color: #b1d6e6; font-size: 12px; text-align: center; }
 .empty-grid strong { font-size: 13px; letter-spacing: .1em; }
 .empty-grid button, .state-message button { padding: 7px 12px; background: #91e4d6; color: #14435e; border: 0; border-radius: 4px; font-size: 10px; font-weight: 950; }
@@ -326,9 +357,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .detail-measures div { display: flex; flex-direction: column; gap: 5px; }
 .detail-measures div span { font-size: 9px; font-weight: 950; letter-spacing: .1em; color: #6796ab; }
 .detail-measures strong { font-size: 13px; color: #235171; }
-.save-button { border: 2px solid #d94a63; border-radius: 5px; padding: 9px 12px; background: #f9e4e8; color: #bb4056; font-size: 10px; font-weight: 950; letter-spacing: .07em; }
-.save-button.saved { background: #e34c62; color: white; }
-.save-button span { font-size: 16px; margin-right: 5px; }
 .stats-section { border-top: 2px dashed #91c9d4; padding-top: 11px; }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin-top: 9px; }
 .stat { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 950; color: #4a829b; }
@@ -340,9 +368,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .page-footer a { text-decoration: none; color: #92ebd7; }
 .page-footer a:hover { text-decoration: underline; }
 
-@keyframes oras-boot { 0% { opacity: 0; transform: perspective(1200px) translateY(38px) rotateX(42deg) scale(.82); filter: brightness(.48); } 75% { opacity: 1; } 100% { opacity: 1; transform: perspective(1200px) translateY(0) rotateX(0) scale(1); filter: brightness(1); } }
-@keyframes lcd-on { from { opacity: .06; filter: brightness(.05); transform: scaleY(.06); } to { opacity: 1; filter: brightness(1); transform: scaleY(1); } }
-@keyframes led-on { from { opacity: 0; } to { opacity: 1; } }
 @keyframes orb-drift { 0%, 100% { translate: 0 0; } 50% { translate: 20px -32px; } }
 @keyframes pixel-turn { to { transform: rotate(360deg); } }
 @keyframes sprite-float { 50% { transform: translateY(-8px); } }
@@ -374,7 +399,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .collection-toolbar { gap: 5px; }
   .pokemon-search { height: 36px; padding-inline: 8px; }
   .pokemon-search input { font-size: 11px; }
-  .mode-tabs button { min-width: 38px; height: 36px; padding: 0 5px; }
   .grid-scroll { max-height: min(500px, 57vh); }
   .pixel-grid { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 2px; }
   .pokemon-tile { height: 43px; padding: 2px 1px; }
@@ -396,7 +420,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .detail-aura { width: 110px; height: 110px; }
   .detail-sprite-stage img { height: 125px; }
   .detail-measures { gap: 12px; margin: 10px 0; }
-  .save-button { font-size: 8px; padding: 7px; }
   .stat { font-size: 8px; gap: 3px; }
   .stat > span { width: 36px; }
   .stat > b { width: 21px; }
@@ -409,7 +432,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .detail-sprite-stage img { width: min(85%, 120px); height: 130px; }
   .detail-information h2 { font-size: 21px; margin-bottom: 7px; }
   .detail-measures { margin: 9px 0; }
-  .save-button { font-size: 8px; }
   .stats-grid { gap: 7px 9px; }
   .stat { font-size: 8px; gap: 3px; }
   .stat > span { width: 39px; }
@@ -418,5 +440,5 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .three-background { display: none; }
-  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen { animation: none; opacity: 1; transform: none; filter: none; }
+  .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen, .power-light { animation: none; opacity: 1; transform: none; filter: none; }
 }

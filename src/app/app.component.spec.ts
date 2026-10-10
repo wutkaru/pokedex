@@ -21,7 +21,6 @@ describe('AppComponent', () => {
     } as Pokedex));
 
     window.history.replaceState({}, '', window.location.pathname);
-    window.localStorage.removeItem('hoenn-dex-favorites');
 
     await TestBed.configureTestingModule({
       imports: [AppComponent],
@@ -75,6 +74,9 @@ describe('AppComponent', () => {
     expect(view.querySelector('.oras-silhouette')).toBeNull();
     expect(view.querySelectorAll('.original-screen-button').length).toBe(1);
     expect(view.querySelector('.detail-screen')).toBeNull();
+    expect(view.querySelector('.original-power-indicator')).not.toBeNull();
+    expect(view.querySelector('.power-light')).not.toBeNull();
+    expect(view.querySelector('.mode-tabs')).toBeNull();
     expect(http.match(() => true).length).toBe(0);
     expect(dexService.GetPokedex).toHaveBeenCalledOnceWith('updated-hoenn');
   });
@@ -135,7 +137,7 @@ describe('AppComponent', () => {
     expect(window.location.search).not.toContain('pokemon=');
   });
 
-  it('searches by name or number and only shows saved sprites in favorites', async () => {
+  it('searches by regional or national number without save controls', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     await Promise.resolve();
@@ -147,15 +149,14 @@ describe('AppComponent', () => {
     expect(app.visibleEntries().map(entry => entry.name)).toEqual(['Torchic']);
 
     app.clearFilters();
-    app.openDetail(app.entries()[0]);
-    app.toggleFavorite();
-    expect(app.totalFavorites()).toBe(1);
-    app.closeDetail();
-    app.setMode('favorites');
-    expect(app.visibleEntries().map(entry => entry.speciesId)).toEqual([252]);
-
-    app.clearFilters();
     expect(app.visibleEntries().length).toBe(3);
+    app.openDetail(app.entries()[0]);
+    fixture.detectChanges();
+    const view = fixture.nativeElement as HTMLElement;
+    expect(view.querySelector('.save-button')).toBeNull();
+    expect(view.querySelector('.tile-star')).toBeNull();
+    expect(view.textContent).not.toContain('SAVE POKÉMON');
+    app.closeDetail();
   });
 
   it('moves between Pokémon within detail view and respects browser navigation', async () => {
