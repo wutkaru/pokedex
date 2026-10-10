@@ -284,27 +284,26 @@ export class AppComponent {
     }
   }
 
-  private async fetchDetail(speciesId: number, requestId: number): Promise<void> {
+  private fetchDetail(speciesId: number, requestId: number): void {
     this.detailLoading.set(true);
     this.detailError.set(false);
 
-    try {
-      const response = await firstValueFrom(
-        this.http.get<PokemonDetail>('https://pokeapi.co/api/v2/pokemon/' + speciesId)
-      );
-      this.detailCache.set(speciesId, response);
-      if (requestId === this.requestSequence) {
-        this.detail.set(response);
-      }
-    } catch {
-      if (requestId === this.requestSequence) {
-        this.detailError.set(true);
-      }
-    } finally {
-      if (requestId === this.requestSequence) {
-        this.detailLoading.set(false);
-      }
-    }
+    this.http.get<PokemonDetail>('https://pokeapi.co/api/v2/pokemon/' + speciesId)
+      .subscribe({
+        next: response => {
+          this.detailCache.set(speciesId, response);
+          if (requestId === this.requestSequence) {
+            this.detail.set(response);
+            this.detailLoading.set(false);
+          }
+        },
+        error: () => {
+          if (requestId === this.requestSequence) {
+            this.detailError.set(true);
+            this.detailLoading.set(false);
+          }
+        }
+      });
   }
 
   private syncSelectionFromUrl(entries: DexEntry[]): void {
