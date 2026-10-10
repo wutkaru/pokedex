@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pokedex-${ github.ref }
+  group: pokedex-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${ steps.publish.outputs.page_url }
+      url: ${{ steps.publish.outputs.page_url }}
     steps:
       - name: Publish
         id: publish
