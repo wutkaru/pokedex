@@ -261,13 +261,38 @@ export class AppComponent {
     if (event.key === 'Escape' && this.selected()) {
       event.preventDefault();
       this.closeDetail();
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    } else if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
       event.preventDefault();
-      this.previous();
-    } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.next();
+      const direction = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1;
+
+      if (this.selected()) {
+        this.navigate(direction);
+      } else {
+        this.moveTileFocus(direction, event.key === 'ArrowUp' || event.key === 'ArrowDown');
+      }
     }
+  }
+
+  private moveTileFocus(direction: number, vertical: boolean): void {
+    const grid = this.spriteScroll?.nativeElement.querySelector<HTMLElement>('.pixel-grid');
+    if (!grid) {
+      return;
+    }
+
+    const tiles = Array.from(grid.querySelectorAll<HTMLButtonElement>('.pokemon-tile'));
+    if (!tiles.length) {
+      return;
+    }
+
+    const columns = getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter(Boolean).length;
+    const step = vertical ? Math.max(1, columns) : 1;
+    const focused = tiles.findIndex(tile => tile === document.activeElement);
+    const target = focused < 0
+      ? (direction < 0 ? tiles.length - 1 : 0)
+      : Math.min(tiles.length - 1, Math.max(0, focused + direction * step));
+
+    tiles[target].focus({ preventScroll: true });
+    tiles[target].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
 
   private navigate(offset: number): void {
