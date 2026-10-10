@@ -17,57 +17,33 @@
   <section class="device-showcase" aria-label="Omega Ruby and Alpha Sapphire Pokédex inspired device">
     <div class="showcase-caption"><span>ORAS CONCEPT / HANDHELD</span><span>POWER ON • SCAN READY</span></div>
 
-    <div class="oras-device">
-      <svg class="oras-silhouette" viewBox="0 0 1200 435" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="oras-body" x1="0" y1="0" x2="0.8" y2="1">
-            <stop offset="0%" stop-color="#ff956c"/>
-            <stop offset="16%" stop-color="#ff573a"/>
-            <stop offset="62%" stop-color="#ed352c"/>
-            <stop offset="100%" stop-color="#ac1725"/>
-          </linearGradient>
-          <linearGradient id="oras-edge" x1="0" y1="0" x2="0.3" y2="1">
-            <stop offset="0%" stop-color="#ffb080"/>
-            <stop offset="100%" stop-color="#7c1429"/>
-          </linearGradient>
-          <linearGradient id="oras-reflection" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#fff6b8" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#fff6b8" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <path d="M 58 166 C 70 116 142 115 196 108 C 255 101 279 64 328 42 C 351 30 380 22 416 22 L 785 22 C 825 22 848 30 873 44 C 921 65 952 102 1013 109 C 1076 116 1138 120 1148 165 C 1163 215 1161 278 1134 309 C 1106 337 1051 341 1008 345 C 939 353 923 389 852 400 C 804 409 741 408 674 408 L 524 408 C 457 408 390 409 349 398 C 279 381 260 351 190 345 C 125 339 87 332 65 301 C 40 270 42 211 58 166 Z"
-              fill="#6c1526" stroke="#69152d" stroke-width="10"/>
-        <path d="M 59 153 C 69 115 146 112 198 105 C 259 96 287 59 329 43 C 357 31 378 26 417 26 L 784 26 C 825 26 851 37 872 48 C 925 72 950 104 1011 112 C 1067 118 1130 126 1140 165 C 1152 203 1150 267 1124 299 C 1098 324 1042 332 999 337 C 931 346 909 376 851 386 C 803 394 749 393 673 393 L 525 393 C 453 393 405 391 350 385 C 286 373 264 341 193 335 C 134 331 95 324 73 293 C 51 266 48 205 59 153 Z"
-              fill="url(#oras-body)" stroke="url(#oras-edge)" stroke-width="6"/>
-        <path d="M 69 154 C 84 128 143 120 202 117 C 257 108 293 73 336 55 C 366 41 388 38 420 38 L 784 38 C 827 38 851 49 868 59 C 917 81 948 117 1007 122 C 1071 129 1115 137 1125 162"
-              fill="none" stroke="url(#oras-reflection)" stroke-width="9" stroke-linecap="round" opacity=".87"/>
-        <path d="M 153 329 C 233 325 280 370 354 380 M 846 383 C 911 373 940 336 1028 329"
-              fill="none" stroke="#9c1727" stroke-width="9" opacity=".67"/>
-        <path d="M 395 403 Q 600 411 808 403" fill="none" stroke="#78212b" stroke-width="5" opacity=".5"/>
-        <path d="M 91 137 Q 143 125 185 127 M 1012 126 Q 1065 127 1111 145" fill="none" stroke="#ffe29c" stroke-width="4" opacity=".5" stroke-linecap="round"/>
-      </svg>
+    <div class="original-device" aria-label="Pokédex shell assembled from the original project artwork">
+      <img class="original-cover original-cover-top"
+           src="assets/pokedex_cover_top.png"
+           alt=""
+           width="2048" height="512" decoding="async">
+      <img class="original-cover original-cover-bottom"
+           src="assets/pokedex_cover_bottom.png"
+           alt=""
+           width="2048" height="512" decoding="async">
+      <img class="original-emblem"
+           src="assets/pokedex_dpad.png"
+           alt=""
+           width="512" height="512" decoding="async">
 
-      <img class="oras-ball-emblem" src="assets/pokedex_dpad.png" alt="Original Poké Ball emblem">
-      <span class="oras-power-led" aria-hidden="true"></span>
-
-      <div class="oras-lcd" aria-hidden="true">
-        <div class="oras-lcd-display">
-          <span class="lcd-mini-label">HOENN REGIONAL DATABASE</span>
-          <span class="lcd-logo">POKÉDEX</span>
-          <span class="lcd-readout"><span class="lcd-cursor">◆</span> SYSTEM READY <span class="lcd-mark">/ 03</span></span>
-          <span class="lcd-cross" aria-hidden="true">+</span>
-        </div>
+      <div class="original-screen">
+        <button class="original-screen-button"
+                type="button"
+                (click)="focusFirstIcon()"
+                aria-label="Open the Hoenn Pokémon icon collection">
+          <span class="original-screen-heading">HOENN REGIONAL DATABASE</span>
+          <img class="original-screen-logo"
+               src="assets/cw_pokedex.png"
+               alt="Pokédex"
+               width="1024" height="256" decoding="async">
+          <span class="original-screen-hint"><span aria-hidden="true">◆</span> PRESS TO BROWSE</span>
+        </button>
       </div>
-
-      <div class="oras-buttons">
-        <button type="button" class="oras-button oras-button-a" (click)="focusFirstIcon()" aria-label="Browse Pokémon icon grid">A</button>
-        <button type="button" class="oras-button oras-button-b" (click)="focusSearch()" aria-label="Search the Pokédex">B</button>
-      </div>
-      <div class="oras-small-buttons" aria-hidden="true">
-        <span class="oras-small-button"></span>
-        <span class="oras-small-button"></span>
-      </div>
-      <div class="oras-speaker" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     </div>
     <div class="showcase-footnote"><span>THE ORIGINAL HOENN DESIGN</span><span>SCROLL TO EXPLORE ↓</span></div>
   </section>
