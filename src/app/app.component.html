@@ -7,200 +7,197 @@
     <div class="site-brand">
       <span class="brand-ball" aria-hidden="true"><i></i></span>
       <div>
-        <span class="brand-caption">POKÉMON • HOENN REGION</span>
-        <h1>PIXEL <em>POKÉDEX</em></h1>
+        <span class="brand-caption">HOENN RESEARCH LAB / GENERATION III</span>
+        <h1>HOENN <em>POKÉDEX</em></h1>
       </div>
     </div>
-    <span class="header-chip"><span class="chip-dot"></span> GENERATION III / FIELD EDITION</span>
+    <span class="header-chip"><span class="chip-dot"></span> FIELD EDITION · 03</span>
   </header>
 
-  <section class="dex-stage" aria-label="Hoenn Pokédex interactive handheld">
-    <div class="stage-kicker"><span>001 / HOENN DATABASE</span><span>ORAS INSPIRED • REV. 01</span></div>
+  <section class="device-showcase" aria-label="Omega Ruby and Alpha Sapphire Pokédex inspired device">
+    <div class="showcase-caption"><span>ORAS CONCEPT / HANDHELD</span><span>POWER ON • SCAN READY</span></div>
 
-    <div class="gba-shell">
-      <div class="body-highlight" aria-hidden="true"></div>
-      <div class="top-indicators" aria-hidden="true">
-        <span class="power-led"></span>
-        <span class="tiny-dot"></span>
-        <span class="tiny-dot amber"></span>
-      </div>
+    <div class="oras-device">
+      <svg class="oras-silhouette" viewBox="0 0 1200 435" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="oras-body" x1="0" y1="0" x2="0.8" y2="1">
+            <stop offset="0%" stop-color="#ff956c"/>
+            <stop offset="16%" stop-color="#ff573a"/>
+            <stop offset="62%" stop-color="#ed352c"/>
+            <stop offset="100%" stop-color="#ac1725"/>
+          </linearGradient>
+          <linearGradient id="oras-edge" x1="0" y1="0" x2="0.3" y2="1">
+            <stop offset="0%" stop-color="#ffb080"/>
+            <stop offset="100%" stop-color="#7c1429"/>
+          </linearGradient>
+          <linearGradient id="oras-reflection" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff6b8" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#fff6b8" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M 58 166 C 70 116 142 115 196 108 C 255 101 279 64 328 42 C 351 30 380 22 416 22 L 785 22 C 825 22 848 30 873 44 C 921 65 952 102 1013 109 C 1076 116 1138 120 1148 165 C 1163 215 1161 278 1134 309 C 1106 337 1051 341 1008 345 C 939 353 923 389 852 400 C 804 409 741 408 674 408 L 524 408 C 457 408 390 409 349 398 C 279 381 260 351 190 345 C 125 339 87 332 65 301 C 40 270 42 211 58 166 Z"
+              fill="#6c1526" stroke="#69152d" stroke-width="10"/>
+        <path d="M 59 153 C 69 115 146 112 198 105 C 259 96 287 59 329 43 C 357 31 378 26 417 26 L 784 26 C 825 26 851 37 872 48 C 925 72 950 104 1011 112 C 1067 118 1130 126 1140 165 C 1152 203 1150 267 1124 299 C 1098 324 1042 332 999 337 C 931 346 909 376 851 386 C 803 394 749 393 673 393 L 525 393 C 453 393 405 391 350 385 C 286 373 264 341 193 335 C 134 331 95 324 73 293 C 51 266 48 205 59 153 Z"
+              fill="url(#oras-body)" stroke="url(#oras-edge)" stroke-width="6"/>
+        <path d="M 69 154 C 84 128 143 120 202 117 C 257 108 293 73 336 55 C 366 41 388 38 420 38 L 784 38 C 827 38 851 49 868 59 C 917 81 948 117 1007 122 C 1071 129 1115 137 1125 162"
+              fill="none" stroke="url(#oras-reflection)" stroke-width="9" stroke-linecap="round" opacity=".87"/>
+        <path d="M 153 329 C 233 325 280 370 354 380 M 846 383 C 911 373 940 336 1028 329"
+              fill="none" stroke="#9c1727" stroke-width="9" opacity=".67"/>
+        <path d="M 395 403 Q 600 411 808 403" fill="none" stroke="#78212b" stroke-width="5" opacity=".5"/>
+        <path d="M 91 137 Q 143 125 185 127 M 1012 126 Q 1065 127 1111 145" fill="none" stroke="#ffe29c" stroke-width="4" opacity=".5" stroke-linecap="round"/>
+      </svg>
 
-      <div class="body-layout">
-        <aside class="left-controls" aria-label="Pokédex controls">
-          <div class="control-ring">
-            <img src="assets/pokedex_dpad.png" alt="" class="original-dpad">
-            <button class="control-hotspot control-prev" type="button" (click)="previous()" aria-label="Scroll or select previous Pokémon">▲</button>
-            <button class="control-hotspot control-next" type="button" (click)="next()" aria-label="Scroll or select next Pokémon">▼</button>
-          </div>
-          <span class="controls-caption">NAVIGATION</span>
-          <span class="left-control-mark" aria-hidden="true">◆</span>
-        </aside>
+      <img class="oras-ball-emblem" src="assets/pokedex_dpad.png" alt="Original Poké Ball emblem">
+      <span class="oras-power-led" aria-hidden="true"></span>
 
-        <div class="display-bezel">
-          <div class="display-glass">
-            <div class="boot-covers" aria-hidden="true">
-              <img class="boot-cover boot-cover-top" src="assets/pokedex_cover_top.png" alt="">
-              <img class="boot-cover boot-cover-bottom" src="assets/pokedex_cover_bottom.png" alt="">
-            </div>
-
-            <div class="display-content">
-              <div class="display-toolbar">
-                <div class="screen-title">
-                  <span class="screen-live" aria-hidden="true"></span>
-                  <span>{{ selected() ? 'SPECIES RECORD' : 'HOENN REGIONAL DEX' }}</span>
-                </div>
-                <span class="screen-counter">{{ selected() ? 'NO. ' + formatNumber(selected()!.number) : formatNumber(visibleEntries().length) + ' ENTRIES' }}</span>
-              </div>
-
-              @if (selected(); as pokemon) {
-                <section class="detail-screen" aria-label="Selected Pokémon details">
-                  <div class="detail-topbar">
-                    <button type="button" class="screen-back" (click)="closeDetail()" aria-label="Back to pixel Pokédex">← <span>BACK TO DEX</span></button>
-                    <span class="detail-number">HOENN #{{ formatNumber(pokemon.number) }}</span>
-                  </div>
-                  <div class="detail-body">
-                    <div class="detail-sprite-stage">
-                      <div class="detail-aura" aria-hidden="true"></div>
-                      <img [src]="spriteUrl(pokemon.speciesId)"
-                           [alt]="pokemon.name + ' pixel art'"
-                           (error)="spriteFallback($event, pokemon.speciesId)">
-                      <div class="stage-ground" aria-hidden="true"></div>
-                    </div>
-                    <div class="detail-information">
-                      <span class="field-caption">POKÉMON FILE / {{ formatNumber(pokemon.speciesId) }}</span>
-                      <h2>{{ pokemon.name }}</h2>
-                      <div class="detail-tags">
-                        @if (detail(); as data) {
-                          @for (type of data.types; track type.slot) {
-                            <span [class]="'type-chip type-' + type.type.name">{{ type.type.name }}</span>
-                          }
-                        } @else if (detailLoading()) {
-                          <span class="detail-loading">SCANNING SPECIES…</span>
-                        } @else if (detailError()) {
-                          <button class="retry-detail" type="button" (click)="retryDetail()">RETRY DATA ↻</button>
-                        }
-                      </div>
-                      <div class="detail-measures">
-                        <div><span>HEIGHT</span><strong>{{ detail() ? heightInMeters() : '—' }}</strong></div>
-                        <div><span>WEIGHT</span><strong>{{ detail() ? weightInKilos() : '—' }}</strong></div>
-                      </div>
-                      <button type="button" class="save-button" [class.saved]="isFavorite(pokemon.speciesId)"
-                              [attr.aria-pressed]="isFavorite(pokemon.speciesId)"
-                              (click)="toggleFavorite()">
-                        <span aria-hidden="true">{{ isFavorite(pokemon.speciesId) ? '★' : '☆' }}</span>
-                        {{ isFavorite(pokemon.speciesId) ? 'SAVED TO FAVORITES' : 'SAVE POKÉMON' }}
-                      </button>
-                    </div>
-                  </div>
-                  @if (detail(); as data) {
-                    <div class="stats-section">
-                      <span class="field-caption">BASE STATS</span>
-                      <div class="stats-grid">
-                        @for (stat of data.stats; track stat.stat.name) {
-                          <div class="stat"><span>{{ statLabel(stat.stat.name) }}</span><div class="stat-track"><i [style.width.%]="statWidth(stat.base_stat)"></i></div><b>{{ stat.base_stat }}</b></div>
-                        }
-                      </div>
-                    </div>
-                  }
-                </section>
-              } @else {
-                <section class="index-screen" aria-label="Pixel art Pokémon index">
-                  <div class="dex-intro">
-                    <div>
-                      <span class="eyebrow">REGIONAL INDEX • GENERATION III</span>
-                      <h2>Hoenn <span>Pokédex</span></h2>
-                      <p>Tap a Pokémon to open its individual record.</p>
-                    </div>
-                    <img class="original-logo" src="assets/cw_pokedex.png" alt="Pokédex logo">
-                  </div>
-
-                  <div class="grid-controls">
-                    <label class="pokemon-search">
-                      <span class="search-mark" aria-hidden="true">⌕</span>
-                      <span class="sr-only">Search Pokémon by name or number</span>
-                      <input type="search" placeholder="Search name or number…" [value]="search()" (input)="onSearch($event)">
-                    </label>
-                    <div class="mode-tabs" role="group" aria-label="Pokédex filter">
-                      <button type="button" (click)="setMode('all')" [class.active]="listMode() === 'all'" [attr.aria-pressed]="listMode() === 'all'">ALL</button>
-                      <button type="button" (click)="setMode('favorites')" [class.active]="listMode() === 'favorites'" [attr.aria-pressed]="listMode() === 'favorites'">★ {{ totalFavorites() }}</button>
-                    </div>
-                  </div>
-
-                  @if (loading()) {
-                    <div class="state-message" role="status">
-                      <span class="pixel-loader" aria-hidden="true"></span>
-                      <strong>LOADING REGIONAL DEX</strong>
-                      <span>Fetching your Pokémon collection…</span>
-                    </div>
-                  } @else if (loadError()) {
-                    <div class="state-message" role="alert">
-                      <span class="state-icon" aria-hidden="true">!</span>
-                      <strong>CONNECTION LOST</strong>
-                      <span>Unable to load the Hoenn Pokédex.</span>
-                      <button type="button" (click)="loadPokedex()">RETRY CONNECTION ↻</button>
-                    </div>
-                  } @else {
-                    <div class="grid-scroll" #spriteScroll>
-                      <div class="pixel-grid">
-                        @for (entry of visibleEntries(); track entry.speciesId) {
-                          <button type="button" class="pokemon-tile"
-                                  [attr.aria-label]="'Open ' + entry.name + ', Hoenn number ' + formatNumber(entry.number)"
-                                  (click)="openDetail(entry)">
-                            <span class="tile-number">{{ formatNumber(entry.number) }}</span>
-                            <span class="tile-image">
-                              <img [src]="spriteUrl(entry.speciesId)" [alt]="entry.name + ' pixel art'"
-                                   (error)="spriteFallback($event, entry.speciesId)"
-                                   loading="lazy" width="80" height="80">
-                            </span>
-                            <span class="tile-name">{{ entry.name }}</span>
-                            @if (isFavorite(entry.speciesId)) {
-                              <span class="tile-star" aria-label="Saved Pokémon">★</span>
-                            }
-                          </button>
-                        } @empty {
-                          <div class="empty-grid">
-                            <strong>NO POKÉMON FOUND</strong>
-                            <span>Try a different name or reset your filters.</span>
-                            <button type="button" (click)="clearFilters()">CLEAR FILTERS</button>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  }
-                </section>
-              }
-
-              <div class="display-status">
-                <span><span class="status-pixel"></span> POKÉDEX ONLINE</span>
-                <span>{{ selected() ? 'PRESS ESC TO RETURN' : 'SELECT A POKÉMON ◆' }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="bezel-label"><span>LCD DISPLAY • HOENN</span><span>◆ POKÉMON RESEARCH</span></div>
+      <div class="oras-lcd" aria-hidden="true">
+        <div class="oras-lcd-display">
+          <span class="lcd-mini-label">HOENN REGIONAL DATABASE</span>
+          <span class="lcd-logo">POKÉDEX</span>
+          <span class="lcd-readout"><span class="lcd-cursor">◆</span> SYSTEM READY <span class="lcd-mark">/ 03</span></span>
+          <span class="lcd-cross" aria-hidden="true">+</span>
         </div>
-
-        <aside class="right-controls" aria-label="Additional controls">
-          <div class="button-bay">
-            <button type="button" class="hardware-button hardware-a" (click)="next()" aria-label="Next Pokémon">A</button>
-            <button type="button" class="hardware-button hardware-b" (click)="selected() ? closeDetail() : previous()" aria-label="Back or previous Pokémon">B</button>
-          </div>
-          <div class="speaker-grill" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-          <span class="controls-caption">A / B</span>
-        </aside>
       </div>
 
-      <div class="device-bottom">
-        <div class="mini-controls"><span></span><span></span></div>
-        <span>POKÉDEX • HOENN REGION</span>
-        <span class="power-icon" aria-hidden="true">◉</span>
+      <div class="oras-buttons">
+        <button type="button" class="oras-button oras-button-a" (click)="focusFirstIcon()" aria-label="Browse Pokémon icon grid">A</button>
+        <button type="button" class="oras-button oras-button-b" (click)="focusSearch()" aria-label="Search the Pokédex">B</button>
+      </div>
+      <div class="oras-small-buttons" aria-hidden="true">
+        <span class="oras-small-button"></span>
+        <span class="oras-small-button"></span>
+      </div>
+      <div class="oras-speaker" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="showcase-footnote"><span>THE ORIGINAL HOENN DESIGN</span><span>SCROLL TO EXPLORE ↓</span></div>
+  </section>
+
+  <section class="dex-collection" aria-label="Hoenn Pokémon icon collection" [attr.inert]="selected() ? '' : null" [attr.aria-hidden]="selected() ? 'true' : null">
+    <div class="collection-head">
+      <div>
+        <span class="collection-kicker">POKÉDEX / ICON ARCHIVE</span>
+        <h2>Hoenn <span>Collection</span></h2>
+        <p>Original-size Pokémon menu icons. Select one to view its Pokédex entry.</p>
+      </div>
+      <div class="collection-count"><strong>{{ visibleEntries().length }}</strong><span>POKÉMON</span></div>
+    </div>
+
+    <div class="collection-toolbar">
+      <label class="pokemon-search">
+        <span class="search-mark" aria-hidden="true">⌕</span>
+        <span class="sr-only">Search Pokémon by name or number</span>
+        <input #searchInput type="search" placeholder="Search by name or number..." [value]="search()" (input)="onSearch($event)" autocomplete="off">
+      </label>
+      <div class="mode-tabs" role="group" aria-label="Pokédex filter">
+        <button type="button" (click)="setMode('all')" [class.active]="listMode() === 'all'" [attr.aria-pressed]="listMode() === 'all'">ALL</button>
+        <button type="button" (click)="setMode('favorites')" [class.active]="listMode() === 'favorites'" [attr.aria-pressed]="listMode() === 'favorites'">★ {{ totalFavorites() }}</button>
       </div>
     </div>
 
-    <div class="stage-footnote"><span>FIELD RESEARCH UNIT // 03</span><span>PIXEL ART FIRST · DETAILS ON DEMAND</span></div>
+    @if (loading()) {
+      <div class="state-message" role="status">
+        <span class="pixel-loader" aria-hidden="true"></span>
+        <strong>LOADING HOENN POKÉDEX</strong>
+        <span>Preparing the complete Pokémon icon archive…</span>
+      </div>
+    } @else if (loadError()) {
+      <div class="state-message" role="alert">
+        <span class="state-icon" aria-hidden="true">!</span>
+        <strong>CONNECTION LOST</strong>
+        <span>Unable to load the Hoenn Pokédex.</span>
+        <button type="button" (click)="loadPokedex()">RETRY CONNECTION ↻</button>
+      </div>
+    } @else {
+      <div class="grid-scroll" #spriteScroll>
+        <div class="pixel-grid" aria-label="Pokémon menu icons">
+          @for (entry of visibleEntries(); track entry.speciesId) {
+            <button type="button" class="pokemon-tile"
+                    [attr.data-species-id]="entry.speciesId"
+                    [attr.title]="formatNumber(entry.number) + ' • ' + entry.name"
+                    [attr.aria-label]="'Open ' + entry.name + ', Hoenn number ' + formatNumber(entry.number)"
+                    (click)="openDetail(entry)">
+              <img [src]="iconUrl(entry.speciesId)" alt=""
+                   (error)="iconFallback($event, entry.speciesId)"
+                   loading="lazy" width="40" height="32">
+              @if (isFavorite(entry.speciesId)) {
+                <span class="tile-star" aria-hidden="true">★</span>
+              }
+            </button>
+          } @empty {
+            <div class="empty-grid">
+              <strong>NO POKÉMON FOUND</strong>
+              <span>Try another name or clear the filter.</span>
+              <button type="button" (click)="clearFilters()">CLEAR FILTERS</button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    <div class="collection-status"><span><i></i> REGIONAL DATA LOADED</span><span>TAP AN ICON TO OPEN ITS RECORD</span></div>
   </section>
 
+  @if (selected(); as pokemon) {
+    <div class="detail-overlay">
+      <button type="button" class="detail-scrim" (click)="closeDetail()" aria-label="Close Pokémon details"></button>
+      <section class="detail-screen" role="dialog" aria-modal="true" aria-labelledby="pokemon-record-title">
+        <div class="detail-topbar">
+          <button #closeButton type="button" class="screen-back" (click)="closeDetail()" aria-label="Back to Pokémon icons">← BACK TO ICONS</button>
+          <span class="detail-number">HOENN #{{ formatNumber(pokemon.number) }} / NATIONAL #{{ formatNumber(pokemon.speciesId) }}</span>
+        </div>
+        <div class="detail-body">
+          <div class="detail-sprite-stage">
+            <div class="detail-aura" aria-hidden="true"></div>
+            <img [src]="spriteUrl(pokemon.speciesId)"
+                 [alt]="pokemon.name + ' pixel sprite'"
+                 (error)="spriteFallback($event, pokemon.speciesId)">
+            <div class="stage-ground" aria-hidden="true"></div>
+          </div>
+          <div class="detail-information">
+            <span class="field-caption">POKÉMON / SPECIES FILE</span>
+            <h2 id="pokemon-record-title">{{ pokemon.name }}</h2>
+            <div class="detail-tags">
+              @if (detail(); as data) {
+                @for (type of data.types; track type.slot) {
+                  <span [class]="'type-chip type-' + type.type.name">{{ type.type.name }}</span>
+                }
+              } @else if (detailLoading()) {
+                <span class="detail-loading">SCANNING SPECIES…</span>
+              } @else if (detailError()) {
+                <button class="retry-detail" type="button" (click)="retryDetail()">RETRY DATA ↻</button>
+              }
+            </div>
+            <div class="detail-measures">
+              <div><span>HEIGHT</span><strong>{{ detail() ? heightInMeters() : '—' }}</strong></div>
+              <div><span>WEIGHT</span><strong>{{ detail() ? weightInKilos() : '—' }}</strong></div>
+            </div>
+            <button type="button" class="save-button" [class.saved]="isFavorite(pokemon.speciesId)"
+                    [attr.aria-pressed]="isFavorite(pokemon.speciesId)"
+                    (click)="toggleFavorite()">
+              <span aria-hidden="true">{{ isFavorite(pokemon.speciesId) ? '★' : '☆' }}</span>
+              {{ isFavorite(pokemon.speciesId) ? 'SAVED TO FAVORITES' : 'SAVE POKÉMON' }}
+            </button>
+          </div>
+        </div>
+        @if (detail(); as data) {
+          <div class="stats-section">
+            <span class="field-caption">BASE STATS</span>
+            <div class="stats-grid">
+              @for (stat of data.stats; track stat.stat.name) {
+                <div class="stat">
+                  <span>{{ statLabel(stat.stat.name) }}</span>
+                  <div class="stat-track"><i [style.width.%]="statWidth(stat.base_stat)"></i></div>
+                  <b>{{ stat.base_stat }}</b>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </section>
+    </div>
+  }
+
   <footer class="page-footer">
-    <span>UNOFFICIAL POKÉMON FAN PROJECT · ORIGINAL PIXEL SPRITES</span>
+    <span>UNOFFICIAL POKÉMON FAN PROJECT · ORIGINAL MENU ICONS</span>
     <span>DATA BY <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">POKÉAPI ↗</a></span>
   </footer>
 </main>
