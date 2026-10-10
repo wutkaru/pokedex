@@ -73,7 +73,7 @@ describe('AppComponent', () => {
 
     const app = fixture.componentInstance;
     const view = fixture.nativeElement as HTMLElement;
-    app.openDetail(app.entries()[0]);
+    (view.querySelector('.pokemon-tile') as HTMLButtonElement).click();
     fixture.detectChanges();
 
     expect(app.selected()?.name).toBe('Treecko');
@@ -90,7 +90,7 @@ describe('AppComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(view.textContent).toContain('GRASS');
+    expect(view.textContent).toContain('grass');
     expect(view.textContent).toContain('45');
 
     app.closeDetail();
