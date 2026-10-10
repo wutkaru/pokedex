@@ -35,6 +35,16 @@
            alt=""
            width="512" height="512" decoding="async">
 
+      <div class="device-inner-layer">
+        <div class="device-control-frame" role="group" aria-label="Pokédex device controls">
+          <button type="button" class="device-control device-control-a"
+                  (click)="openCollection()" aria-label="A button: Open Pokémon archive">A</button>
+          <button type="button" class="device-control device-control-b"
+                  [disabled]="!collectionOpened()"
+                  (click)="closeCollection()" aria-label="B button: Return to Pokédex startup">B</button>
+        </div>
+      </div>
+
       <div class="original-power-indicator" role="img" aria-label="Green power indicator on">
         <span class="power-light" aria-hidden="true"></span>
       </div>
