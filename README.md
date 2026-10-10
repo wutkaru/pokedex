@@ -4,15 +4,15 @@ An unofficial Hoenn Pokédex that restores the **original device artwork already
 
 ## Experience
 
-1. The page displays the original Pokédex casing, using `pokedex_cover_top.png` and `pokedex_cover_bottom.png` at their shared 2048×512 source aspect ratio, overlapping the halves at the screen seam. The Poké Ball emblem is the original `pokedex_dpad.png`; the LCD uses the original `cw_pokedex.png` wordmark and `diamond_cover.png` decoration.
-2. The **default screen is a compact, icon-sized Hoenn archive**. Every Pokémon occupies a 40×32 pixel image, with no oversized card, species name, or number on the icon tile. Names and numbers are available through the icon's accessible label and hover tooltip.
+1. The page opens with only the original ORAS-inspired Pokédex shell, centered in the viewport. Tap the screen (or activate it with the keyboard) to reveal the Pokémon browser. The casing uses `pokedex_cover_top.png` and `pokedex_cover_bottom.png` at their shared 2048×512 source aspect ratio, overlapping the halves at the screen seam. The Poké Ball emblem is the original `pokedex_dpad.png`; the LCD uses the original `cw_pokedex.png` wordmark and `diamond_cover.png` decoration.
+2. After the screen is activated, the Hoenn archive appears as small Pokémon sprites on round white Poké Ball buttons. Every sprite keeps its 40×32 pixel menu icon; names and numbers remain available through accessible labels and hover tooltips.
 3. Click or tap a menu icon to open a separate detail overlay, including height, weight, types and stats.
 4. Press **Back** or **Escape** to return to the same filtered grid and scroll position.
 5. Search by name or regional/national number and use the hardware-like directional buttons for navigation. The experience is read-only, with no favorites or save function.
 
 ## Ambient animation
 
-Optional floating 3D Poké Balls are rendered behind the device using [Three.js](https://threejs.org/) v0.167.1, loaded **at runtime** from a pinned jsDelivr module URL (`src/assets/pokeball-scene.js`). The application remains fully usable without this external module. The casing assembly, green power light and LCD start-up are animated with CSS instead of WebGL to keep pixel artwork sharp.
+Optional floating 3D Poké Balls are rendered behind the device using [Three.js](https://threejs.org/) v0.167.1, loaded **at runtime** from a pinned jsDelivr module URL (`src/assets/pokeball-scene.js`). The application remains fully usable without this external module. The casing assembly, Poké Ball D-pad fitted into the shell cutout, green power light over the original indicator and LCD start-up are animated with CSS instead of WebGL to keep pixel artwork sharp. The initial page contains no visible archive, header or footer until the screen is activated.
 
 The WebGL scene uses a small number of low-polygon objects, caps rendering pixel density, pauses while the tab is hidden, disposes GPU resources on exit, and does not run when `prefers-reduced-motion: reduce` is enabled.
 
@@ -22,7 +22,7 @@ The WebGL scene uses a small number of low-polygon objects, caps rendering pixel
 - Primary icon wall uses [PokeAPI/sprites](https://github.com/PokeAPI/sprites)'s Generation VII `icons/front_default` (40px menu icons), matching the **original repository's source choice**. Detail view uses Emerald pixel sprites, with fallback assets where necessary.
 - Detail records are fetched **only when needed** and cached for the current session.
 - Original artwork is retained in `src/assets/`. The live casing uses both `pokedex_cover_*.png` halves, the `pokedex_dpad.png` emblem, the `cw_pokedex.png` logo, and the `diamond_cover.png` texture. No replacement shell SVG and no copied external 3D model are used.
-- The site provides browsing and species details only. No favorites, save feature, login or personal data service is used.
+- The site provides browsing and species details only. No favorites, save feature, login or personal data service is used. The browser background is dark even during mobile overscroll.
 
 ## Local development
 

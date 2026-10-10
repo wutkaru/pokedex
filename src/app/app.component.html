@@ -1,8 +1,9 @@
-<main class="pokedex-app">
+<main class="pokedex-app" [class.intro-mode]="!collectionOpened()" [class.browser-mode]="collectionOpened()">
   <div class="background-orb background-orb-one" aria-hidden="true"></div>
   <div class="background-orb background-orb-two" aria-hidden="true"></div>
   <div class="three-background" id="pokeball-field" aria-hidden="true"></div>
 
+  @if (collectionOpened()) {
   <header class="site-header">
     <div class="site-brand">
       <span class="brand-ball" aria-hidden="true"><i></i></span>
@@ -13,9 +14,12 @@
     </div>
     <span class="header-chip"><span class="chip-dot"></span> FIELD EDITION · 03</span>
   </header>
+  }
 
   <section class="device-showcase" aria-label="Omega Ruby and Alpha Sapphire Pokédex inspired device">
-    <div class="showcase-caption"><span>ORAS CONCEPT / HANDHELD</span><span>POWER ON • SCAN READY</span></div>
+    @if (collectionOpened()) {
+      <div class="showcase-caption"><span>ORAS CONCEPT / HANDHELD</span><span>POWER ON • SCAN READY</span></div>
+    }
 
     <div class="original-device" aria-label="Pokédex shell assembled from the original project artwork">
       <img class="original-cover original-cover-top"
@@ -31,15 +35,14 @@
            alt=""
            width="512" height="512" decoding="async">
 
-      <div class="original-power-indicator" role="img" aria-label="Power indicator on">
+      <div class="original-power-indicator" role="img" aria-label="Green power indicator on">
         <span class="power-light" aria-hidden="true"></span>
-        <span class="power-caption" aria-hidden="true">POWER</span>
       </div>
 
       <div class="original-screen">
         <button class="original-screen-button"
                 type="button"
-                (click)="focusFirstIcon()"
+                (click)="openCollection()"
                 aria-label="Open the Hoenn Pokémon icon collection">
           <span class="original-screen-heading">HOENN REGIONAL DATABASE</span>
           <img class="original-screen-logo"
@@ -50,9 +53,12 @@
         </button>
       </div>
     </div>
-    <div class="showcase-footnote"><span>THE ORIGINAL HOENN DESIGN</span><span>SCROLL TO EXPLORE ↓</span></div>
+    @if (collectionOpened()) {
+      <div class="showcase-footnote"><span>THE ORIGINAL HOENN DESIGN</span><span>POKÉMON DATABASE ONLINE</span></div>
+    }
   </section>
 
+  @if (collectionOpened()) {
   <section class="dex-collection" aria-label="Hoenn Pokémon icon collection" [attr.inert]="selected() ? '' : null" [attr.aria-hidden]="selected() ? 'true' : null">
     <div class="collection-head">
       <div>
@@ -109,6 +115,7 @@
     }
     <div class="collection-status"><span><i></i> REGIONAL DATA LOADED</span><span>TAP AN ICON TO OPEN ITS RECORD</span></div>
   </section>
+  }
 
   @if (selected(); as pokemon) {
     <div class="detail-overlay">
@@ -164,8 +171,10 @@
     </div>
   }
 
+  @if (collectionOpened()) {
   <footer class="page-footer">
     <span>UNOFFICIAL POKÉMON FAN PROJECT · ORIGINAL MENU ICONS</span>
     <span>DATA BY <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">POKÉAPI ↗</a></span>
   </footer>
+  }
 </main>

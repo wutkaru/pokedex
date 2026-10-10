@@ -42,6 +42,7 @@ export class AppComponent {
   readonly detailLoading = signal(false);
   readonly detailError = signal(false);
   readonly search = signal('');
+  readonly collectionOpened = signal(false);
 
   readonly visibleEntries = computed(() => {
     const query = this.search().trim().toLowerCase();
@@ -92,7 +93,24 @@ export class AppComponent {
     }
   }
 
+  openCollection(): void {
+    if (this.collectionOpened()) {
+      this.focusFirstIcon();
+      return;
+    }
+
+    this.collectionOpened.set(true);
+    requestAnimationFrame(() => {
+      if (this.spriteScroll?.nativeElement.querySelector('.pokemon-tile')) {
+        this.focusFirstIcon();
+      } else {
+        this.searchInput?.nativeElement.focus({ preventScroll: true });
+      }
+    });
+  }
+
   openDetail(entry: DexEntry): void {
+    this.collectionOpened.set(true);
     this.lastOpenedSpeciesId = entry.speciesId;
     this.savedScrollTop = this.spriteScroll?.nativeElement.scrollTop ?? this.savedScrollTop;
     const url = new URL(window.location.href);
@@ -216,6 +234,10 @@ export class AppComponent {
 
   @HostListener('window:keydown', ['$event'])
   onKeyboard(event: KeyboardEvent): void {
+    if (!this.collectionOpened()) {
+      return;
+    }
+
     const target = event.target as HTMLElement | null;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
       if (event.key === 'Escape') {
@@ -309,6 +331,7 @@ export class AppComponent {
     const matched = id > 0 ? entries.find(entry => entry.speciesId === id) : undefined;
 
     if (matched) {
+      this.collectionOpened.set(true);
       this.selectDetail(matched);
     } else if (this.selected()) {
       this.returnToGrid();
