@@ -20,6 +20,7 @@ describe('AppComponent', () => {
       ]
     } as Pokedex));
 
+    window.history.replaceState({}, '', window.location.pathname);
     window.localStorage.removeItem('hoenn-dex-favorites');
 
     await TestBed.configureTestingModule({
