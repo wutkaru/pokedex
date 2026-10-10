@@ -177,7 +177,6 @@ export class AppComponent {
     try {
       window.localStorage.setItem('hoenn-dex-favorites', JSON.stringify(Array.from(updated)));
     } catch {
-      // The UI stays usable when browser storage is unavailable.
     }
   }
 
