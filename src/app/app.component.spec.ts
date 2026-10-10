@@ -88,6 +88,7 @@ describe('AppComponent', () => {
       types: [{ slot: 1, type: { name: 'grass' } }],
       stats: [{ base_stat: 45, stat: { name: 'hp' } }]
     });
+    await Promise.resolve();
     fixture.detectChanges();
 
     expect(view.textContent).toContain('grass');
