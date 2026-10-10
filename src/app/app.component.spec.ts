@@ -138,6 +138,35 @@ describe('AppComponent', () => {
     expect(view.querySelector('.pokedex-app')?.classList.contains('intro-mode')).toBeTrue();
   });
 
+  it('moves focus between menu icons using directional keys without opening details', async () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
+
+    const app = fixture.componentInstance;
+    (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.device-control-a')!.click();
+    fixture.detectChanges();
+
+    const tiles = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.pokemon-tile'));
+    tiles[0].focus();
+    const key = (name: string) => {
+      const event = new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true });
+      tiles[0].dispatchEvent(event);
+      fixture.detectChanges();
+    };
+
+    key('ArrowRight');
+    expect(document.activeElement).toBe(tiles[1]);
+    expect(app.selected()).toBeNull();
+    key('ArrowLeft');
+    expect(document.activeElement).toBe(tiles[0]);
+    key('ArrowDown');
+    expect(document.activeElement).toBe(tiles[2]);
+    expect(app.selected()).toBeNull();
+    expect(new URLSearchParams(window.location.search).has('pokemon')).toBeFalse();
+  });
+
   it('opens a Pokémon file only after a selection, then returns to the grid', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
