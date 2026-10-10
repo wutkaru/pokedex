@@ -77,6 +77,9 @@ describe('AppComponent', () => {
     expect(view.querySelector('.original-power-indicator')).not.toBeNull();
     expect(view.querySelector('.power-light')).not.toBeNull();
     expect(view.querySelector('.power-caption')).toBeNull();
+    expect(view.querySelector('.device-inner-layer')).not.toBeNull();
+    expect(view.querySelectorAll('.device-control').length).toBe(2);
+    expect((view.querySelector('.device-control-b') as HTMLButtonElement).disabled).toBeTrue();
     expect(view.querySelector('.mode-tabs')).toBeNull();
     expect(http.match(() => true).length).toBe(0);
     expect(dexService.GetPokedex).toHaveBeenCalledOnceWith('updated-hoenn');
@@ -105,6 +108,34 @@ describe('AppComponent', () => {
     expect(firstIcon.getAttribute('src')).toContain('/generation-vii/icons/252.png');
     expect(firstIcon.getAttribute('width')).toBe('40');
     expect(firstIcon.getAttribute('height')).toBe('32');
+  });
+
+  it('uses A to open the archive and B to return to the centered device', async () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
+
+    const app = fixture.componentInstance;
+    const view = fixture.nativeElement as HTMLElement;
+    const a = view.querySelector('.device-control-a') as HTMLButtonElement;
+    const b = view.querySelector('.device-control-b') as HTMLButtonElement;
+
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
+    expect(b.disabled).toBeTrue();
+    a.click();
+    fixture.detectChanges();
+
+    expect(app.collectionOpened()).toBeTrue();
+    expect(view.querySelectorAll('.pokemon-tile').length).toBe(3);
+    expect(b.disabled).toBeFalse();
+
+    b.click();
+    fixture.detectChanges();
+    expect(app.collectionOpened()).toBeFalse();
+    expect(view.querySelector('.dex-collection')).toBeNull();
+    expect(view.querySelector('.pokedex-app')?.classList.contains('intro-mode')).toBeTrue();
   });
 
   it('opens a Pokémon file only after a selection, then returns to the grid', async () => {
