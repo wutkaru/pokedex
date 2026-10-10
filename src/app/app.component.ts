@@ -109,6 +109,18 @@ export class AppComponent {
     });
   }
 
+  closeCollection(): void {
+    if (this.selected()) {
+      this.closeDetail();
+      return;
+    }
+
+    this.search.set('');
+    this.savedScrollTop = 0;
+    this.collectionOpened.set(false);
+    window.scrollTo(0, 0);
+  }
+
   openDetail(entry: DexEntry): void {
     this.collectionOpened.set(true);
     this.lastOpenedSpeciesId = entry.speciesId;
