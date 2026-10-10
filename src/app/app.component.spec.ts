@@ -88,10 +88,8 @@ describe('AppComponent', () => {
       types: [{ slot: 1, type: { name: 'grass' } }],
       stats: [{ base_stat: 45, stat: { name: 'hp' } }]
     });
-    await new Promise<void>(resolve => setTimeout(resolve, 0));
-    fixture.detectChanges();
-
     expect(fixture.componentInstance.detail()).toBeTruthy();
+    fixture.detectChanges();
     expect(view.textContent).toContain('grass');
     expect(view.textContent).toContain('45');
 
