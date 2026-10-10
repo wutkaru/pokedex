@@ -32,6 +32,8 @@ interface PokemonDetail {
 })
 export class AppComponent {
   @ViewChild('spriteScroll') private spriteScroll?: ElementRef<HTMLElement>;
+  @ViewChild('searchInput') private searchInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('closeButton') private closeButton?: ElementRef<HTMLButtonElement>;
 
   readonly title = 'Hoenn Pokédex';
   readonly loading = signal(true);
@@ -64,6 +66,7 @@ export class AppComponent {
   private readonly detailCache = new Map<number, PokemonDetail>();
   private requestSequence = 0;
   private savedScrollTop = 0;
+  private lastOpenedSpeciesId: number | null = null;
 
   ngOnInit(): void {
     this.restoreFavorites();
@@ -99,11 +102,13 @@ export class AppComponent {
   }
 
   openDetail(entry: DexEntry): void {
+    this.lastOpenedSpeciesId = entry.speciesId;
     this.savedScrollTop = this.spriteScroll?.nativeElement.scrollTop ?? this.savedScrollTop;
     const url = new URL(window.location.href);
     url.searchParams.set('pokemon', String(entry.speciesId));
     window.history.pushState({}, '', url.pathname + url.search + url.hash);
     this.selectDetail(entry);
+    requestAnimationFrame(() => this.closeButton?.nativeElement.focus());
   }
 
   closeDetail(): void {
@@ -168,6 +173,38 @@ export class AppComponent {
 
   formatNumber(value: number): string {
     return String(value).padStart(3, '0');
+  }
+
+  focusFirstIcon(): void {
+    const first = this.spriteScroll?.nativeElement.querySelector<HTMLButtonElement>('.pokemon-tile');
+    first?.focus({ preventScroll: true });
+    first?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'nearest'
+    });
+  }
+
+  focusSearch(): void {
+    if (this.selected()) {
+      this.closeDetail();
+      requestAnimationFrame(() => this.searchInput?.nativeElement.focus());
+    } else {
+      this.searchInput?.nativeElement.focus();
+    }
+  }
+
+  iconUrl(speciesId: number): string {
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' +
+      'versions/generation-vii/icons/' + speciesId + '.png';
+  }
+
+  iconFallback(event: Event, speciesId: number): void {
+    const image = event.target as HTMLImageElement;
+    if (image.src.includes('/generation-vii/icons/')) {
+      image.src = this.spriteUrl(speciesId);
+    } else {
+      image.hidden = true;
+    }
   }
 
   spriteUrl(speciesId: number): string {
@@ -326,6 +363,12 @@ export class AppComponent {
     requestAnimationFrame(() => {
       if (this.spriteScroll) {
         this.spriteScroll.nativeElement.scrollTop = this.savedScrollTop;
+      }
+      if (this.lastOpenedSpeciesId !== null) {
+        const tile = this.spriteScroll?.nativeElement.querySelector<HTMLButtonElement>(
+          '.pokemon-tile[data-species-id="' + this.lastOpenedSpeciesId + '"]'
+        );
+        tile?.focus({ preventScroll: true });
       }
     });
   }
