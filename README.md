@@ -1,27 +1,46 @@
-# Pokedex
+# Hoenn Pokédex
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+An unofficial, mobile-friendly Hoenn Pokédex inspired by the red and blue hardware and interface details of Pokémon Omega Ruby / Alpha Sapphire and classic handheld Pokédex designs.
 
-## Development server
+**Live site after deployment:** https://wutkaru.github.io/pokedex/
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+- Complete updated Hoenn regional index from [PokéAPI](https://pokeapi.co/docs/v2#pokedexes), loaded in **one index request** instead of one request per Pokémon.
+- Full Pokémon artwork and sprites from [PokéAPI Sprites](https://github.com/PokeAPI/sprites).
+- Detail lookup on selection (type, height and weight), with an in-memory cache.
+- Search by species name, Hoenn number or National number.
+- Previous / next buttons, keyboard arrow controls, and responsive mobile layout.
+- Saved favorites stored in local browser storage.
+- Motion effects with reduced-motion support.
+- Shareable Pokémon selection using the `?pokemon=252` query parameter.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Development
 
-## Build
+Requires Node.js 20+.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm ci
+npm start
+```
 
-## Running unit tests
+Open http://localhost:4200.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Verification
 
-## Running end-to-end tests
+```bash
+npm run build -- --base-href /pokedex/
+npm test -- --watch=false --browsers=ChromeHeadless
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## GitHub Pages
 
-## Further help
+A GitHub Actions workflow in `.github/workflows/build.yml` builds and tests pull requests, and deploys the `main` branch only after verification passes.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**One-time repository setting:** under **Settings → Pages → Build and deployment → Source**, choose **GitHub Actions**. Merging an approved feature PR into `main` then triggers the publication workflow. The deployed Angular application uses the `/pokedex/` base path.
+
+Old compiled files in `docs/` are legacy output and are not used by the Actions-based publishing workflow.
+
+## Credits
+
+Pokémon and all related names and artwork are the property of their respective owners. This is a non-commercial fan project and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company.
