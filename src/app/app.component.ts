@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ElementRef, HostListener, ViewChild,
+  computed, inject, signal
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PokedexesService } from '../services/games/pokedexes.service';
 
@@ -10,7 +13,6 @@ interface DexEntry {
   number: number;
   speciesId: number;
   name: string;
-  slug: string;
 }
 
 interface PokemonDetail {
@@ -29,6 +31,8 @@ interface PokemonDetail {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
+  @ViewChild('spriteScroll') private spriteScroll?: ElementRef<HTMLElement>;
+
   readonly title = 'Hoenn Pokédex';
   readonly loading = signal(true);
   readonly loadError = signal(false);
@@ -36,6 +40,7 @@ export class AppComponent {
   readonly selected = signal<DexEntry | null>(null);
   readonly detail = signal<PokemonDetail | null>(null);
   readonly detailLoading = signal(false);
+  readonly detailError = signal(false);
   readonly search = signal('');
   readonly listMode = signal<ListMode>('all');
   readonly favorites = signal<ReadonlySet<number>>(new Set<number>());
@@ -45,7 +50,8 @@ export class AppComponent {
     const favorites = this.favorites();
     return this.entries().filter(entry =>
       (this.listMode() === 'all' || favorites.has(entry.speciesId)) &&
-      (!query || entry.name.toLowerCase().includes(query) ||
+      (!query ||
+        entry.name.toLowerCase().includes(query) ||
         String(entry.number).includes(query) ||
         String(entry.speciesId).includes(query))
     );
@@ -57,6 +63,7 @@ export class AppComponent {
   private readonly http = inject(HttpClient);
   private readonly detailCache = new Map<number, PokemonDetail>();
   private requestSequence = 0;
+  private savedScrollTop = 0;
 
   ngOnInit(): void {
     this.restoreFavorites();
@@ -70,29 +77,20 @@ export class AppComponent {
     try {
       const response = await firstValueFrom(this.dexService.GetPokedex('updated-hoenn'));
       const entries: DexEntry[] = response.pokemon_entries
-        .map(species => {
-          const speciesId = Number(species.pokemon_species.url.split('/').filter(Boolean).pop());
-          return {
-            number: species.entry_number,
-            speciesId,
-            name: this.displayName(species.pokemon_species.name),
-            slug: species.pokemon_species.name
-          };
-        })
+        .map(species => ({
+          number: species.entry_number,
+          speciesId: Number(species.pokemon_species.url.split('/').filter(Boolean).pop()),
+          name: this.displayName(species.pokemon_species.name)
+        }))
         .filter(entry => Number.isInteger(entry.speciesId) && entry.speciesId > 0)
         .sort((a, b) => a.number - b.number);
 
       if (entries.length === 0) {
-        throw new Error('The Hoenn Pokédex returned no entries.');
+        throw new Error('No regional Pokémon were returned.');
       }
 
       this.entries.set(entries);
-
-      const requestedId = typeof window !== 'undefined'
-        ? Number(new URLSearchParams(window.location.search).get('pokemon'))
-        : 0;
-      const firstEntry = entries.find(entry => entry.speciesId === requestedId) ?? entries[0];
-      this.selectPokemon(firstEntry, false);
+      this.syncSelectionFromUrl(entries);
     } catch {
       this.loadError.set(true);
     } finally {
@@ -100,82 +98,66 @@ export class AppComponent {
     }
   }
 
-  selectPokemon(entry: DexEntry, updateUrl = true): void {
-    if (this.selected()?.speciesId === entry.speciesId) {
-      return;
-    }
+  openDetail(entry: DexEntry): void {
+    this.savedScrollTop = this.spriteScroll?.nativeElement.scrollTop ?? this.savedScrollTop;
+    const url = new URL(window.location.href);
+    url.searchParams.set('pokemon', String(entry.speciesId));
+    window.history.pushState({}, '', url.pathname + url.search + url.hash);
+    this.selectDetail(entry);
+  }
 
-    this.selected.set(entry);
-    this.detail.set(null);
-    this.detailLoading.set(false);
+  closeDetail(): void {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('pokemon');
+    window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    this.returnToGrid();
+  }
 
-    if (updateUrl && typeof window !== 'undefined') {
-      const url = new URL(window.location.href);
-      url.searchParams.set('pokemon', String(entry.speciesId));
-      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
-    }
-
-    const cached = this.detailCache.get(entry.speciesId);
-    const requestId = ++this.requestSequence;
-
-    if (cached) {
-      this.detail.set(cached);
-    } else {
-      this.detailLoading.set(true);
-      void this.loadDetails(entry.speciesId, requestId);
-    }
-
-    if (typeof window !== 'undefined' && typeof requestAnimationFrame === 'function') {
-      requestAnimationFrame(() => {
-        const current = document.querySelector('.entry-row.is-active');
-        if (current && 'scrollIntoView' in current) {
-          current.scrollIntoView({
-            block: 'nearest',
-            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
-          });
-        }
-      });
-    }
+  @HostListener('window:popstate')
+  onPopState(): void {
+    this.syncSelectionFromUrl(this.entries());
   }
 
   previous(): void {
-    this.move(-1);
+    this.navigate(-1);
   }
 
   next(): void {
-    this.move(1);
+    this.navigate(1);
   }
 
-  setSearch(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.search.set(input.value);
+  onSearch(event: Event): void {
+    this.search.set((event.target as HTMLInputElement).value);
+    this.resetGridScroll();
   }
 
   setMode(mode: ListMode): void {
     this.listMode.set(mode);
+    this.resetGridScroll();
   }
 
   clearFilters(): void {
     this.search.set('');
     this.listMode.set('all');
+    this.resetGridScroll();
   }
 
   toggleFavorite(): void {
-    const selected = this.selected();
-    if (!selected) {
+    const pokemon = this.selected();
+    if (!pokemon) {
       return;
     }
 
-    const updated = new Set(this.favorites());
-    if (updated.has(selected.speciesId)) {
-      updated.delete(selected.speciesId);
+    const next = new Set(this.favorites());
+    if (next.has(pokemon.speciesId)) {
+      next.delete(pokemon.speciesId);
     } else {
-      updated.add(selected.speciesId);
+      next.add(pokemon.speciesId);
     }
-    this.favorites.set(updated);
+    this.favorites.set(next);
 
     try {
-      window.localStorage.setItem('hoenn-dex-favorites', JSON.stringify(Array.from(updated)));
+      window.localStorage.setItem('hoenn-dex-favorites', JSON.stringify(Array.from(next)));
     } catch {
     }
   }
@@ -188,19 +170,16 @@ export class AppComponent {
     return String(value).padStart(3, '0');
   }
 
-  artworkUrl(speciesId: number): string {
-    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/' +
-      speciesId + '.png';
-  }
-
   spriteUrl(speciesId: number): string {
-    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + speciesId + '.png';
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' +
+      'versions/generation-iii/emerald/' + speciesId + '.png';
   }
 
-  artworkFallback(event: Event, speciesId: number): void {
+  spriteFallback(event: Event, speciesId: number): void {
     const image = event.target as HTMLImageElement;
-    if (image.src.includes('/official-artwork/')) {
-      image.src = this.spriteUrl(speciesId);
+    if (image.src.includes('/generation-iii/')) {
+      image.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' +
+        speciesId + '.png';
     } else {
       image.hidden = true;
     }
@@ -230,34 +209,96 @@ export class AppComponent {
     return Math.min(100, Math.round(value / 200 * 100));
   }
 
-  @HostListener('window:keydown', ['$event'])
-  onKeyboard(event: KeyboardEvent): void {
-    const element = event.target as HTMLElement | null;
-    if (element && (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.isContentEditable)) {
-      return;
-    }
-
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.next();
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.previous();
+  retryDetail(): void {
+    const pokemon = this.selected();
+    if (pokemon) {
+      void this.fetchDetail(pokemon.speciesId, ++this.requestSequence);
     }
   }
 
-  private async loadDetails(speciesId: number, requestId: number): Promise<void> {
+  @HostListener('window:keydown', ['$event'])
+  onKeyboard(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      if (event.key === 'Escape') {
+        target.blur();
+      }
+      return;
+    }
+
+    if (event.key === 'Escape' && this.selected()) {
+      event.preventDefault();
+      this.closeDetail();
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.previous();
+    } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.next();
+    }
+  }
+
+  private navigate(offset: number): void {
+    const list = this.visibleEntries();
+    if (list.length === 0) {
+      return;
+    }
+
+    if (!this.selected()) {
+      const container = this.spriteScroll?.nativeElement;
+      if (container) {
+        container.scrollBy({
+          top: offset * Math.max(container.clientHeight * 0.65, 150),
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+        });
+      }
+      return;
+    }
+
+    const index = list.findIndex(entry => entry.speciesId === this.selected()?.speciesId);
+    const nextIndex = index === -1 ? 0 : (index + offset + list.length) % list.length;
+    const entry = list[nextIndex];
+    const url = new URL(window.location.href);
+    url.searchParams.set('pokemon', String(entry.speciesId));
+    window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    this.selectDetail(entry);
+  }
+
+  private selectDetail(entry: DexEntry): void {
+    if (this.selected()?.speciesId === entry.speciesId) {
+      return;
+    }
+
+    this.selected.set(entry);
+    this.detail.set(null);
+    this.detailError.set(false);
+
+    const requestId = ++this.requestSequence;
+    const cached = this.detailCache.get(entry.speciesId);
+
+    if (cached) {
+      this.detailLoading.set(false);
+      this.detail.set(cached);
+    } else {
+      void this.fetchDetail(entry.speciesId, requestId);
+    }
+  }
+
+  private async fetchDetail(speciesId: number, requestId: number): Promise<void> {
+    this.detailLoading.set(true);
+    this.detailError.set(false);
+
     try {
-      const details = await firstValueFrom(
+      const response = await firstValueFrom(
         this.http.get<PokemonDetail>('https://pokeapi.co/api/v2/pokemon/' + speciesId)
       );
-      this.detailCache.set(speciesId, details);
+      this.detailCache.set(speciesId, response);
       if (requestId === this.requestSequence) {
-        this.detail.set(details);
+        this.detail.set(response);
       }
     } catch {
       if (requestId === this.requestSequence) {
-        this.detail.set(null);
+        this.detailError.set(true);
       }
     } finally {
       if (requestId === this.requestSequence) {
@@ -266,31 +307,51 @@ export class AppComponent {
     }
   }
 
-  private move(offset: number): void {
-    const list = this.visibleEntries();
-    if (list.length === 0) {
-      return;
-    }
+  private syncSelectionFromUrl(entries: DexEntry[]): void {
+    const id = Number(new URLSearchParams(window.location.search).get('pokemon'));
+    const matched = id > 0 ? entries.find(entry => entry.speciesId === id) : undefined;
 
-    const index = list.findIndex(entry => entry.speciesId === this.selected()?.speciesId);
-    const nextIndex = index === -1 ? 0 : (index + offset + list.length) % list.length;
-    this.selectPokemon(list[nextIndex]);
+    if (matched) {
+      this.selectDetail(matched);
+    } else if (this.selected()) {
+      this.returnToGrid();
+    }
   }
 
-  private displayName(slug: string): string {
-    return slug.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+  private returnToGrid(): void {
+    ++this.requestSequence;
+    this.selected.set(null);
+    this.detail.set(null);
+    this.detailLoading.set(false);
+    this.detailError.set(false);
+    requestAnimationFrame(() => {
+      if (this.spriteScroll) {
+        this.spriteScroll.nativeElement.scrollTop = this.savedScrollTop;
+      }
+    });
+  }
+
+  private resetGridScroll(): void {
+    this.savedScrollTop = 0;
+    if (this.spriteScroll) {
+      this.spriteScroll.nativeElement.scrollTop = 0;
+    }
   }
 
   private restoreFavorites(): void {
     try {
-      const saved: unknown = JSON.parse(window.localStorage.getItem('hoenn-dex-favorites') ?? '[]');
-      if (Array.isArray(saved)) {
-        this.favorites.set(new Set(saved.filter(
-          (value): value is number => typeof value === 'number' && Number.isInteger(value) && value > 0
+      const value: unknown = JSON.parse(window.localStorage.getItem('hoenn-dex-favorites') ?? '[]');
+      if (Array.isArray(value)) {
+        this.favorites.set(new Set(value.filter(
+          (item): item is number => Number.isInteger(item) && item > 0
         )));
       }
     } catch {
       this.favorites.set(new Set<number>());
     }
+  }
+
+  private displayName(name: string): string {
+    return name.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
   }
 }

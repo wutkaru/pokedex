@@ -1,21 +1,30 @@
-# Hoenn Pokédex
+# Hoenn Pixel Pokédex
 
-An unofficial, mobile-friendly Hoenn Pokédex inspired by the red and blue hardware and interface details of Pokémon Omega Ruby / Alpha Sapphire and classic handheld Pokédex designs.
+An unofficial Hoenn Pokédex built around the **original pixel sprite grid** and GBA-shaped Pokédex imagery from Pokémon Omega Ruby / Alpha Sapphire.
 
-**Live site after deployment:** https://wutkaru.github.io/pokedex/
+## Experience
 
-## Features
+1. The website opens with a GBA-inspired device entrance and a short animation using the original cover artwork.
+2. The **default screen is a complete pixel-art Hoenn index**; no individual Pokémon details are fetched on initial entry.
+3. Click or tap a pixel sprite to open its individual record, including height, weight, types and stats.
+4. Press **Back** or **Escape** to return to the same filtered grid and scroll position.
+5. Search by name or regional/national number, save favorites locally, and use the hardware-like directional buttons for navigation.
 
-- Complete updated Hoenn regional index from [PokéAPI](https://pokeapi.co/docs/v2#pokedexes), loaded in **one index request** instead of one request per Pokémon.
-- Full Pokémon artwork and sprites from [PokéAPI Sprites](https://github.com/PokeAPI/sprites).
-- Detail lookup on selection (type, height and weight), with an in-memory cache.
-- Search by species name, Hoenn number or National number.
-- Previous / next buttons, keyboard arrow controls, and responsive mobile layout.
-- Saved favorites stored in local browser storage.
-- Motion effects with reduced-motion support.
-- Shareable Pokémon selection using the `?pokemon=252` query parameter.
+## Ambient animation
 
-## Development
+Optional floating 3D Poké Balls are rendered behind the device using [Three.js](https://threejs.org/) v0.167.1, loaded **at runtime** from a pinned jsDelivr module URL (`src/assets/pokeball-scene.js`). The application remains fully usable without this external module. The device opening, covers and sprite transitions use CSS instead of WebGL to keep pixel artwork sharp.
+
+The WebGL scene uses a small number of low-polygon objects, caps rendering pixel density, pauses while the tab is hidden, disposes GPU resources on exit, and does not run when `prefers-reduced-motion: reduce` is enabled.
+
+## Data and artwork
+
+- The regional index is loaded once from [PokéAPI's updated Hoenn Pokédex](https://pokeapi.co/docs/v2#pokedexes).
+- Pixel sprites use [PokeAPI/sprites](https://github.com/PokeAPI/sprites)'s Pokémon Emerald assets where available, with a standard sprite fallback.
+- Detail records are fetched **only when needed** and cached for the current session.
+- Original repository artwork (`pokedex_cover_top.png`, `pokedex_cover_bottom.png`, `pokedex_dpad.png`, `diamond_cover.png`, `cw_pokedex.png`) is retained and reused.
+- Favorites are stored in the browser's `localStorage`; no login or personal data service is used.
+
+## Local development
 
 Requires Node.js 20+.
 
@@ -24,7 +33,7 @@ npm ci
 npm start
 ```
 
-Open http://localhost:4200.
+Open <http://localhost:4200/>.
 
 ## Verification
 
@@ -35,12 +44,12 @@ npm test -- --watch=false --browsers=ChromeHeadless
 
 ## GitHub Pages
 
-A GitHub Actions workflow in `.github/workflows/build.yml` builds and tests pull requests, and deploys the `main` branch only after verification passes.
+After PR approval, merging into `main` triggers `.github/workflows/build.yml`: verify, build with `/pokedex/` as the base href, upload static output and deploy via GitHub Pages.
 
-**One-time repository setting:** under **Settings → Pages → Build and deployment → Source**, choose **GitHub Actions**. Merging an approved feature PR into `main` then triggers the publication workflow. The deployed Angular application uses the `/pokedex/` base path.
+Live site: <https://wutkaru.github.io/pokedex/>.
 
-Old compiled files in `docs/` are legacy output and are not used by the Actions-based publishing workflow.
+**Publishing control:** Keep this feature branch unmerged until the visual design and startup animation are reviewed. CI success alone does not verify the rendered page on all browsers. `docs/` remains legacy output; Actions deploys `dist/pokedex/browser`.
 
-## Credits
+## Attribution
 
-Pokémon and all related names and artwork are the property of their respective owners. This is a non-commercial fan project and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company.
+Pokémon and the related artwork and trademarks belong to their respective owners. This is an unofficial, non-commercial fan project and is not affiliated with Nintendo, Game Freak, or The Pokémon Company.
