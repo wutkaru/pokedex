@@ -104,10 +104,21 @@ async function verifyScenario(browser, scenario) {
     result.archive = await readLayout(page);
     assert.equal(result.archive.horizontalOverflow, 0, 'Archive has horizontal overflow');
     assert.equal(await page.locator('.pokemon-tile').count(), pokemon.length);
+    await page.waitForFunction(() => {
+      const images = Array.from(document.querySelectorAll('.pokemon-tile img'));
+      return images.filter(image => image.complete && image.naturalWidth > 0).length >= 12;
+    }, null, { timeout: 30000 });
+    result.archiveIconsLoaded = await page.locator('.pokemon-tile img').evaluateAll(images =>
+      images.filter(image => image.complete && image.naturalWidth > 0).length
+    );
     await page.screenshot({ path: outputDir + '/' + scenario.name + '-archive.png', fullPage: true });
 
     await page.locator('.pokemon-tile').first().click();
     await page.locator('.detail-screen').waitFor({ state: 'visible' });
+    await page.locator('.detail-sprite-stage img').evaluate(image => image.decode());
+    result.detailSpriteLoaded = await page.locator('.detail-sprite-stage img')
+      .evaluate(image => image.naturalWidth > 0);
+    assert.equal(result.detailSpriteLoaded, true, 'Pokémon detail sprite must load');
     await page.screenshot({ path: outputDir + '/' + scenario.name + '-detail.png', fullPage: true });
     await page.keyboard.press('Escape');
     await page.locator('.detail-screen').waitFor({ state: 'hidden' });
