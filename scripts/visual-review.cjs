@@ -31,6 +31,17 @@ function contains(outer, inner) {
     inner.y + inner.height <= outer.y + outer.height + margin;
 }
 
+async function settlePaint(page, selector) {
+  await page.waitForFunction(target => {
+    const element = document.querySelector(target);
+    return element && Number(getComputedStyle(element).opacity) >= 0.99;
+  }, selector, { timeout: 10000 });
+  await page.evaluate(() => new Promise(resolve => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  }));
+  await page.waitForTimeout(200);
+}
+
 async function readLayout(page) {
   return page.evaluate(() => {
     const bounds = selector => {
@@ -89,6 +100,7 @@ async function verifyScenario(browser, scenario, engine) {
       await page.locator(selector).evaluate(image => image.decode());
     }
 
+    await settlePaint(page, '.original-device');
     result.intro = await readLayout(page);
     assert.equal(result.intro.horizontalOverflow, 0, 'Intro has horizontal overflow');
     for (const part of ['coverTop', 'coverBottom', 'emblem', 'screen', 'controlFrame']) {
@@ -96,7 +108,7 @@ async function verifyScenario(browser, scenario, engine) {
     }
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonA), 'A is outside the inner frame');
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonB), 'B is outside the inner frame');
-    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-intro.png', fullPage: true });
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-intro.png', fullPage: true, animations: 'disabled' });
 
     if (scenario.isMobile) {
       await page.locator('.device-control-a').tap();
@@ -105,17 +117,30 @@ async function verifyScenario(browser, scenario, engine) {
     }
     await page.locator('.dex-collection').waitFor({ state: 'visible' });
     await page.locator('.pokemon-tile').first().waitFor({ state: 'visible' });
+    await settlePaint(page, '.dex-collection');
     result.archive = await readLayout(page);
     assert.equal(result.archive.horizontalOverflow, 0, 'Archive has horizontal overflow');
     assert.equal(await page.locator('.pokemon-tile').count(), pokemon.length);
+    await page.locator('.pokemon-tile img').evaluateAll(async images => {
+      await Promise.all(images.map(async image => {
+        try {
+          await image.decode();
+        } catch {
+          return;
+        }
+      }));
+    });
     await page.waitForFunction(() => {
       const images = Array.from(document.querySelectorAll('.pokemon-tile img'));
-      return images.filter(image => image.complete && image.naturalWidth > 0).length >= 12;
+      return images.length === 16 &&
+        images.every(image => image.complete && image.naturalWidth > 0);
     }, null, { timeout: 30000 });
+    await settlePaint(page, '.dex-collection');
     result.archiveIconsLoaded = await page.locator('.pokemon-tile img').evaluateAll(images =>
       images.filter(image => image.complete && image.naturalWidth > 0).length
     );
-    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-archive.png', fullPage: true });
+    assert.equal(result.archiveIconsLoaded, pokemon.length, 'All archive icons must load before screenshot');
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-archive.png', fullPage: true, animations: 'disabled' });
 
     if (scenario.isMobile) {
       await page.locator('.pokemon-tile').first().tap();
@@ -124,10 +149,11 @@ async function verifyScenario(browser, scenario, engine) {
     }
     await page.locator('.detail-screen').waitFor({ state: 'visible' });
     await page.locator('.detail-sprite-stage img').evaluate(image => image.decode());
+    await settlePaint(page, '.detail-screen');
     result.detailSpriteLoaded = await page.locator('.detail-sprite-stage img')
       .evaluate(image => image.naturalWidth > 0);
     assert.equal(result.detailSpriteLoaded, true, 'Pokémon detail sprite must load');
-    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-detail.png', fullPage: true });
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-detail.png', fullPage: true, animations: 'disabled' });
     if (scenario.isMobile) {
       await page.locator('.screen-back').tap();
     } else {
