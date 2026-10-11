@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { mkdir, writeFile } = require('node:fs/promises');
-const { chromium } = require('playwright');
+const { chromium, webkit } = require('playwright');
 
 const baseUrl = process.env.VISUAL_BASE_URL || 'http://127.0.0.1:4173/';
 const outputDir = 'visual-artifacts';
@@ -61,7 +61,7 @@ async function readLayout(page) {
   });
 }
 
-async function verifyScenario(browser, scenario) {
+async function verifyScenario(browser, scenario, engine) {
   const context = await browser.newContext({
     viewport: scenario.viewport,
     deviceScaleFactor: scenario.isMobile ? 2 : 1,
@@ -70,7 +70,7 @@ async function verifyScenario(browser, scenario) {
     reducedMotion: 'reduce'
   });
   const page = await context.newPage();
-  const result = { scenario: scenario.name, viewport: scenario.viewport };
+  const result = { engine, scenario: scenario.name, viewport: scenario.viewport };
 
   try {
     await page.route('**/api/v2/pokedex/updated-hoenn**', route =>
@@ -96,9 +96,13 @@ async function verifyScenario(browser, scenario) {
     }
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonA), 'A is outside the inner frame');
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonB), 'B is outside the inner frame');
-    await page.screenshot({ path: outputDir + '/' + scenario.name + '-intro.png', fullPage: true });
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-intro.png', fullPage: true });
 
-    await page.locator('.device-control-a').click();
+    if (scenario.isMobile) {
+      await page.locator('.device-control-a').tap();
+    } else {
+      await page.locator('.device-control-a').click();
+    }
     await page.locator('.dex-collection').waitFor({ state: 'visible' });
     await page.locator('.pokemon-tile').first().waitFor({ state: 'visible' });
     result.archive = await readLayout(page);
@@ -111,26 +115,38 @@ async function verifyScenario(browser, scenario) {
     result.archiveIconsLoaded = await page.locator('.pokemon-tile img').evaluateAll(images =>
       images.filter(image => image.complete && image.naturalWidth > 0).length
     );
-    await page.screenshot({ path: outputDir + '/' + scenario.name + '-archive.png', fullPage: true });
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-archive.png', fullPage: true });
 
-    await page.locator('.pokemon-tile').first().click();
+    if (scenario.isMobile) {
+      await page.locator('.pokemon-tile').first().tap();
+    } else {
+      await page.locator('.pokemon-tile').first().click();
+    }
     await page.locator('.detail-screen').waitFor({ state: 'visible' });
     await page.locator('.detail-sprite-stage img').evaluate(image => image.decode());
     result.detailSpriteLoaded = await page.locator('.detail-sprite-stage img')
       .evaluate(image => image.naturalWidth > 0);
     assert.equal(result.detailSpriteLoaded, true, 'Pokémon detail sprite must load');
-    await page.screenshot({ path: outputDir + '/' + scenario.name + '-detail.png', fullPage: true });
-    await page.keyboard.press('Escape');
+    await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-detail.png', fullPage: true });
+    if (scenario.isMobile) {
+      await page.locator('.screen-back').tap();
+    } else {
+      await page.keyboard.press('Escape');
+    }
     await page.locator('.detail-screen').waitFor({ state: 'hidden' });
 
-    await page.locator('.device-control-b').click();
+    if (scenario.isMobile) {
+      await page.locator('.device-control-b').tap();
+    } else {
+      await page.locator('.device-control-b').click();
+    }
     await page.locator('.pokedex-app.intro-mode').waitFor({ state: 'visible' });
     assert.equal(await page.locator('.dex-collection').count(), 0);
-    result.controls = 'A opens, detail opens and closes, B returns to intro';
+    result.controls = 'A opens, detail opens and closes, B returns to intro using device-appropriate input';
     return result;
   } catch (error) {
     await page.screenshot({
-      path: outputDir + '/' + scenario.name + '-failure.png',
+      path: outputDir + '/' + engine + '-' + scenario.name + '-failure.png',
       fullPage: true
     }).catch(() => {});
     throw error;
@@ -141,17 +157,25 @@ async function verifyScenario(browser, scenario) {
 
 async function main() {
   await mkdir(outputDir, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
   const results = [];
   try {
-    for (const scenario of scenarios) {
-      results.push(await verifyScenario(browser, scenario));
+    for (const [engine, browserType] of [['chromium', chromium], ['webkit', webkit]]) {
+      const browser = await browserType.launch({ headless: true });
+      try {
+        for (const scenario of scenarios) {
+          if (engine === 'webkit' && !scenario.isMobile) {
+            continue;
+          }
+          results.push(await verifyScenario(browser, scenario, engine));
+        }
+      } finally {
+        await browser.close();
+      }
     }
   } finally {
-    await browser.close();
     await writeFile(outputDir + '/measurements.json', JSON.stringify(results, null, 2) + '\n');
   }
-  process.stdout.write('Visual review captured ' + results.length + ' viewports.\n');
+  process.stdout.write('Visual review captured ' + results.length + ' browser and viewport combinations.\n');
 }
 
 main().catch(error => {
