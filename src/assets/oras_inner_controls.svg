@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 286" role="img" aria-labelledby="title">
+  <title id="title">Unofficial Hoenn Pokédex inset control plate</title>
+  <defs>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f5962"/>
+      <stop offset=".35" stop-color="#262e35"/>
+      <stop offset="1" stop-color="#060e18"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#292e32"/>
+      <stop offset=".5" stop-color="#151e24"/>
+      <stop offset="1" stop-color="#090e14"/>
+    </linearGradient>
+    <radialGradient id="button" cx=".32" cy=".22" r=".82">
+      <stop offset="0" stop-color="#d5ff97"/>
+      <stop offset=".25" stop-color="#8cf965"/>
+      <stop offset=".6" stop-color="#48b94d"/>
+      <stop offset=".89" stop-color="#216a3d"/>
+      <stop offset="1" stop-color="#154934"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#01050a" stop-opacity=".56"/>
+      <stop offset="1" stop-color="#01050a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="M31 18 Q13 20 10 44 L3 231 Q2 254 26 263 L265 276 Q291 277 292 250 L297 56 Q296 28 271 23 Z" fill="url(#rim)" stroke="#091018" stroke-width="6"/>
+  <path d="M34 35 Q26 35 25 47 L21 232 Q19 245 34 247 L262 258 Q277 258 278 240 L283 59 Q282 44 266 43 Z" fill="url(#panel)" stroke="#3b454b" stroke-width="2"/>
+  <path d="M29 45 L266 51 Q272 52 275 64" fill="none" stroke="#8d9390" stroke-opacity=".33" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="210" cy="96" rx="61" ry="58" fill="url(#shadow)"/>
+  <circle cx="210" cy="96" r="48" fill="#0d1418" stroke="#070e13" stroke-width="5"/>
+  <circle cx="210" cy="96" r="41" fill="#192c26" stroke="#77867e" stroke-width="5"/>
+  <circle cx="210" cy="96" r="34" fill="url(#button)" stroke="#153a2c" stroke-width="3"/>
+  <ellipse cx="199" cy="82" rx="10" ry="15" fill="#e6ffc2" opacity=".6" transform="rotate(-28 199 82)"/>
+  <path d="M182 105 Q188 128 210 129" fill="none" stroke="#103e31" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="113" cy="187" rx="61" ry="58" fill="url(#shadow)"/>
+  <circle cx="113" cy="187" r="48" fill="#0d1418" stroke="#070e13" stroke-width="5"/>
+  <circle cx="113" cy="187" r="41" fill="#192c26" stroke="#77867e" stroke-width="5"/>
+  <circle cx="113" cy="187" r="34" fill="url(#button)" stroke="#153a2c" stroke-width="3"/>
+  <ellipse cx="102" cy="173" rx="10" ry="15" fill="#e6ffc2" opacity=".6" transform="rotate(-28 102 173)"/>
+  <path d="M85 196 Q91 219 113 220" fill="none" stroke="#103e31" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
+</svg>
