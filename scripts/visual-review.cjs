@@ -66,6 +66,7 @@ async function readLayout(page) {
       emblem: bounds('.original-emblem'),
       screen: bounds('.original-screen'),
       controlFrame: bounds('.device-control-frame'),
+      controlArtwork: bounds('.device-control-artwork'),
       buttonA: bounds('.device-control-a'),
       buttonB: bounds('.device-control-b')
     };
@@ -96,7 +97,7 @@ async function verifyScenario(browser, scenario, engine) {
     );
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.locator('.original-device').waitFor({ state: 'visible' });
-    for (const selector of ['.original-cover-top', '.original-cover-bottom', '.original-emblem']) {
+    for (const selector of ['.original-cover-top', '.original-cover-bottom', '.original-emblem', '.device-control-artwork']) {
       await page.locator(selector).evaluate(image => image.decode());
     }
 
@@ -106,6 +107,7 @@ async function verifyScenario(browser, scenario, engine) {
     for (const part of ['coverTop', 'coverBottom', 'emblem', 'screen', 'controlFrame']) {
       assert.ok(contains(result.intro.device, result.intro[part]), part + ' exceeds the device bounds');
     }
+    assert.ok(contains(result.intro.controlFrame, result.intro.controlArtwork), 'Artwork exceeds inner control frame');
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonA), 'A is outside the inner frame');
     assert.ok(contains(result.intro.controlFrame, result.intro.buttonB), 'B is outside the inner frame');
     await page.screenshot({ path: outputDir + '/' + engine + '-' + scenario.name + '-intro.png', fullPage: true, animations: 'disabled' });
