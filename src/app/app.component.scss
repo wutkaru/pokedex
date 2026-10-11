@@ -179,9 +179,18 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   left: 77%;
   width: 11.4%;
   height: 26%;
-  background: url('../assets/oras_inner_controls.svg') center / 100% 100% no-repeat;
   pointer-events: auto;
   animation: inner-control-assemble 810ms cubic-bezier(.17,.82,.25,1) 580ms both;
+}
+.device-control-artwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .device-control {
   position: absolute;
