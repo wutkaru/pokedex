@@ -16,9 +16,9 @@ permissions:
 
 jobs:
   screenshots:
-    name: Desktop and iPhone viewport screenshots
+    name: Desktop Chromium and mobile Chromium/WebKit screenshots
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
       - name: Install isolated visual review tooling
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
       - name: Capture desktop and mobile states
         run: |
           node --check scripts/visual-review.cjs
