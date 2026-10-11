@@ -1,6 +1,6 @@
 # ORAS Hoenn Pokédex — Pokémon Menu Icons
 
-An unofficial Hoenn Pokédex that restores the **original device artwork already authored for this repository**, with a dense archive of **original-size Pokémon menu icons** as the primary content. The shell is assembled from the project's original transparent PNG layers and aligned with CSS instead of tracing a new SVG outline.
+An unofficial Hoenn Pokédex that restores the **original device artwork already authored for this repository**, with a dense archive of **original-size Pokémon menu icons** as the primary content. The shell is assembled from the project's existing transparent PNG housing layers. A separate, newly authored SVG is used only for the provisional A/B inner-control plate; no full-shell replacement outline is used.
 
 ## Experience
 
@@ -12,7 +12,7 @@ An unofficial Hoenn Pokédex that restores the **original device artwork already
 
 ## Ambient animation
 
-Optional floating 3D Poké Balls are rendered behind the device using [Three.js](https://threejs.org/) v0.167.1, loaded **at runtime** from a pinned jsDelivr module URL (`src/assets/pokeball-scene.js`). The application remains fully usable without this external module. The device uses the two original outer casing images, a separate CSS-rendered inner A/B control panel, an undistorted circular Poké Ball D-pad fitted into its cutout, a green power indicator, and a staged LCD power-on sequence. All device motion uses CSS rather than WebGL to keep artwork sharp. The initial page contains no visible archive, header or footer until the screen or A button is activated. The B button returns from the archive to the device splash.
+Optional floating 3D Poké Balls are rendered behind the device using [Three.js](https://threejs.org/) v0.167.1, loaded **at runtime** from a pinned jsDelivr module URL (`src/assets/pokeball-scene.js`). The application remains fully usable without this external module. The device uses the two original outer casing images, a separate SVG-rendered inner A/B control layer with accessible HTML buttons, an undistorted circular Poké Ball D-pad fitted into its cutout, a green power indicator, and a staged LCD power-on sequence. All device motion uses CSS rather than WebGL to keep artwork sharp. The initial page contains no visible archive, header or footer until the screen or A button is activated. The B button returns from the archive to the device splash.
 
 The WebGL scene uses a small number of low-polygon objects, caps rendering pixel density, pauses while the tab is hidden, disposes GPU resources on exit, and does not run when `prefers-reduced-motion: reduce` is enabled.
 
@@ -21,7 +21,7 @@ The WebGL scene uses a small number of low-polygon objects, caps rendering pixel
 - The regional index is loaded once from [PokéAPI's updated Hoenn Pokédex](https://pokeapi.co/docs/v2#pokedexes).
 - Primary icon wall uses [PokeAPI/sprites](https://github.com/PokeAPI/sprites)'s Generation VII `icons/front_default` (40px menu icons), matching the **original repository's source choice**. Detail view uses Emerald pixel sprites, with fallback assets where necessary.
 - Detail records are fetched **only when needed** and cached for the current session.
-- Original artwork is retained in `src/assets/`. The live casing uses both `pokedex_cover_*.png` halves, the `pokedex_dpad.png` emblem, the `cw_pokedex.png` logo, and the `diamond_cover.png` texture. No replacement shell SVG and no copied external 3D model are used.
+- Original artwork is retained in `src/assets/`. The live casing uses both `pokedex_cover_*.png` halves, the `pokedex_dpad.png` emblem, the `cw_pokedex.png` logo, and the `diamond_cover.png` texture. The third layer, `oras_inner_controls.svg`, is an independently authored **ORAS-inspired approximation**, not an official game asset or a verified Nintendo source layer. The separate true-origin A/B artwork remains unresolved in issue #67. No replacement outer-shell SVG or copied external 3D model is used.
 - The site provides browsing and species details only. No favorites, save feature, login or personal data service is used. The browser background is dark even during mobile overscroll.
 
 ## Local development
