@@ -175,15 +175,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 }
 .device-control-frame {
   position: absolute;
-  top: 32.5%;
+  top: 32%;
   left: 77%;
-  width: 11%;
-  height: 33%;
-  border: 1px solid #a32b31a6;
-  border-radius: 48% 52% 47% 53% / 47% 48% 52% 53%;
-  background: linear-gradient(146deg, #f5583a55, #8f1d2b75 60%, #f43f3275);
-  box-shadow: inset 0 2px 2px #ffd1a866, inset 0 -3px 5px #63122170, 0 1px 3px #5a0a1990;
-  transform: rotate(-9deg);
+  width: 11.4%;
+  height: 26%;
+  background: url('../assets/oras_inner_controls.svg') center / 100% 100% no-repeat;
   pointer-events: auto;
   animation: inner-control-assemble 810ms cubic-bezier(.17,.82,.25,1) 580ms both;
 }
@@ -191,32 +187,32 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   position: absolute;
   display: grid;
   place-items: center;
-  width: 35%;
+  width: 32%;
   aspect-ratio: 1;
   padding: 0;
-  border: 1px solid #222431;
+  border: 0;
   border-radius: 50%;
-  color: #202d3b;
-  background: radial-gradient(circle at 31% 21%, #fcffff 0, #cad2dd 27%, #88919f 62%, #434958 91%);
-  box-shadow: inset 0 1px 1px #ffffffc9, inset 0 -2px 2px #343645ae, 0 2px 0 #63162596, 0 3px 4px #47121b70;
+  color: #193a2a;
+  background: transparent;
+  box-shadow: none;
   font-family: inherit;
   font-size: clamp(6px, .83vw, 12px);
   font-weight: 950;
   line-height: 1;
-  text-shadow: 0 1px #ffffff80;
+  text-shadow: 0 1px #eaffc8ac;
   touch-action: manipulation;
   transition: box-shadow .16s ease, filter .16s ease, translate .16s ease;
 }
-.device-control-a { top: 14%; right: 11%; }
-.device-control-b { top: 51%; left: 11%; }
+.device-control-a { top: 16%; right: 12%; }
+.device-control-b { top: 48%; left: 21%; }
 .device-control::after {
   position: absolute;
   content: '';
   inset: -26%;
   border-radius: 50%;
 }
-.device-control:hover:not(:disabled) { filter: brightness(1.12); }
-.device-control:active:not(:disabled) { translate: 0 2px; box-shadow: inset 0 2px 3px #343645a8, 0 1px 1px #47121b88; }
+.device-control:hover:not(:disabled) { background: #ccff7b26; }
+.device-control:active:not(:disabled) { translate: 0 1px; background: #caff7166; box-shadow: inset 0 1px 4px #173c3588; }
 .device-control:disabled { cursor: default; opacity: .78; }
 .original-power-indicator {
   position: absolute;
@@ -351,8 +347,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
 }
 @keyframes inner-control-assemble {
-  from { opacity: 0; transform: translateX(15%) scale(.91) rotate(-16deg); }
-  to { opacity: 1; transform: translateX(0) scale(1) rotate(-9deg); }
+  from { opacity: 0; transform: translateX(15%) scale(.91); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
 }
 @keyframes original-lcd-sweep {
   0% { opacity: 0; transform: translateX(-140%); }
@@ -588,6 +584,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .three-background { display: none; }
   .original-device, .original-cover-top, .original-cover-bottom, .original-emblem, .original-screen, .original-screen::after, .power-light, .device-control-frame, .original-screen-hint, .dex-collection, .site-header, .page-footer { animation: none; opacity: 1; filter: none; }
   .original-device, .original-cover-top, .original-cover-bottom, .original-emblem { transform: none; }
-  .device-control-frame { transform: rotate(-9deg); }
+  .device-control-frame { transform: none; }
   .original-screen::after { opacity: 0; }
 }
