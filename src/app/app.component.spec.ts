@@ -78,6 +78,8 @@ describe('AppComponent', () => {
     expect(view.querySelector('.power-light')).not.toBeNull();
     expect(view.querySelector('.power-caption')).toBeNull();
     expect(view.querySelector('.device-inner-layer')).not.toBeNull();
+    expect(view.querySelector<HTMLImageElement>('.device-control-artwork')?.getAttribute('src'))
+      .toBe('assets/oras_inner_controls.svg');
     expect(view.querySelectorAll('.device-control').length).toBe(2);
     expect((view.querySelector('.device-control-b') as HTMLButtonElement).disabled).toBeTrue();
     expect(view.querySelector('.mode-tabs')).toBeNull();
