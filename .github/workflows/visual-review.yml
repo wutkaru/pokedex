@@ -1,0 +1,56 @@
+name: Capture ORAS visual evidence
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/visual-review.cjs'
+      - '.github/workflows/visual-review.yml'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    name: Desktop Chromium and mobile Chromium/WebKit screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install application dependencies
+        run: npm ci
+      - name: Build local preview
+        run: npm run build -- --base-href /
+      - name: Install isolated visual review tooling
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium webkit
+      - name: Capture desktop and mobile states
+        run: |
+          node --check scripts/visual-review.cjs
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist/pokedex/browser > /tmp/pokedex-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          node scripts/visual-review.cjs
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokedex-visual-review
+          path: visual-artifacts/
+          if-no-files-found: warn
+          retention-days: 14
